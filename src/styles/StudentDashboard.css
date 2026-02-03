@@ -1,0 +1,69 @@
+
+.student-dashboard-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.student-dashboard-card {
+  width: 80%;
+  padding: 32px;
+  border-radius: 16px;
+}
+
+.student-header {
+  margin-bottom: 24px;
+}
+
+.student-name {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.student-meta {
+  margin-top: 8px;
+  color: #666;
+  font-size: 16px;
+}
+.subject-card {
+  padding: 20px;
+  height: 150px;
+  width: 60%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;     
+  justify-content: center;   
+
+  text-align: center;         
+
+  border-radius: 12px;
+}
+
+
+.subject-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.subject-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.subject-marks {
+  margin-top: 12px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.result-pass {
+  color: green;
+  font-weight: bold;
+}
+
+.result-fail {
+  color: red;
+  font-weight: bold;
+}

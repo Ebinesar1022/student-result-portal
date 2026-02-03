@@ -1,0 +1,91 @@
+.welcome-container {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  min-height: 100vh;
+  padding: 60px;
+  background: linear-gradient(135deg, #1f4037, #99f2c8);
+  color: #fff;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+}
+
+.quote {
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.login-btn {
+  width: 220px;
+  padding: 14px;
+  font-size: 16px;
+}
+
+/* ---------- SLIDER ---------- */
+
+.right-section {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.slider {
+  width: 100%;
+  overflow: hidden;
+}
+
+.slider-track {
+  display: flex;
+  gap: 24px;
+  animation: scroll 30s linear infinite;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- CARD ---------- */
+
+.topper-card {
+  min-width: 320px;
+  padding: 20px;
+  text-align: center;
+  background: #ffffff;
+  color: #000;
+  border-radius: 16px;
+}
+
+/* ---------- PODIUM ---------- */
+
+.podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.rank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rank-1 {
+  transform: scale(1.2);
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border: 3px solid #1976d2;
+  margin-bottom: 6px;
+}

@@ -1,0 +1,14 @@
+.admin-header {
+  background: #1976d2;
+  color: white;
+  padding: 16px;
+  font-size: 22px;
+}
+
+.add-btn {
+  margin: 16px 0;
+}
+
+.action-btn {
+  margin-right: 8px;
+}

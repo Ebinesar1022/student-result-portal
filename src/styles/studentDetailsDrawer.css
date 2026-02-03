@@ -1,0 +1,78 @@
+.student-drawer {
+  width: 360px;
+  height: 100%;
+  background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.student-drawer-header {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.student-drawer-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.student-avatar {
+  width: 56px;
+  height: 56px;
+  background: #00e5ff;
+  color: #003;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.student-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.student-roll {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.drawer-divider {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* CONTENT */
+.student-drawer-content {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: 0.3s;
+}
+
+.info-row:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateX(4px);
+}
+
+.info-label {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.info-value {
+  font-size: 14px;
+  font-weight: 500;
+}
