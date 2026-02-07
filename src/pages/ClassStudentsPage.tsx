@@ -19,10 +19,19 @@ import ArrowBackIosNewSharpIcon from "@mui/icons-material/ArrowBackIosNewSharp";
 import SearchIcon from "@mui/icons-material/Search";
 import "../styles/landing.css";
 import ConfirmDialog from "../components/common/ConfirmDialog";
+interface Props {
+  setSnackbar: React.Dispatch<
+    React.SetStateAction<{
+      open: boolean;
+      message: string;
+      severity: "success" | "error" | "warning" | "info";
+    }>
+  >;
+}
 
 const ROWS_PER_PAGE = 5;
 
-const ClassStudentsPage = () => {
+const ClassStudentsPage: React.FC<Props> = ({ setSnackbar }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState<number | null>(
     null,
@@ -72,7 +81,7 @@ const ClassStudentsPage = () => {
 
   return (
     <React.Fragment>
-      <Box className="landing-wrapper">
+      <Box className="bgimg">
         <Box display="flex" justifyContent="space-between" mb={3}>
           <Box display="flex" sx={{ ml: 3 }}>
             <Button
@@ -159,7 +168,7 @@ const ClassStudentsPage = () => {
             }}
             onConfirm={async () => {
               if (selectedStudentId !== null) {
-                await CrudService.deleteStudent(selectedStudentId);
+                await CrudService.delete(`/students/${selectedStudentId}`);
                 load();
               }
               setConfirmOpen(false);

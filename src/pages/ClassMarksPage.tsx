@@ -11,25 +11,36 @@ import {
   MenuItem,
   Typography,
   Button,
+  TablePagination,
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import { AuditService } from "../services/AuditService";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CrudService } from "../api/CrudService";
-import Navbar from "../components/common/Navbar"
+import Navbar from "../components/common/Navbar";
 import { ClassModel } from "../models/Class";
 import { Student } from "../models/Student";
 import "../styles/landing.css";
+import { get } from "http";
 
 interface Props {
   darkMode: boolean;
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+  setSnackbar: React.Dispatch<
+    React.SetStateAction<{
+      open: boolean;
+      message: string;
+      severity: "success" | "error" | "warning" | "info";
+    }>
+  >;
 }
 
 const PASS_MARK = 35;
 
 type FilterType = "ALL" | "PASS" | "FAIL" | "ABOVE_50" | "ABOVE_90" | "CENTUM";
-
 
 const getOverallStatus = (subjects: any[]) =>
   subjects.every((s) => s.marks >= PASS_MARK) ? "PASS" : "FAIL";
@@ -48,13 +59,18 @@ const getOverallGrade = (subjects: any[]) => {
 const getMark = (subjects: any[], subject: string) =>
   subjects.find((s) => s.name === subject)?.marks ?? "-";
 
-
-const ClassMarksPage: React.FC<Props> = ({ darkMode, setDarkMode }) => {
+const ClassMarksPage: React.FC<Props> = ({
+  darkMode,
+  setDarkMode,
+  setSnackbar,
+}) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [students, setStudents] = useState<Student[]>([]);
   const [cls, setCls] = useState<ClassModel | null>(null);
   const [filter, setFilter] = useState<FilterType>("ALL");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     if (!id) return;
@@ -70,9 +86,11 @@ const ClassMarksPage: React.FC<Props> = ({ darkMode, setDarkMode }) => {
 
     load();
   }, [id]);
+  useEffect(() => {
+    setPage(0);
+  }, [filter]);
 
   if (!cls) return null;
-
 
   const filteredStudents = students.filter((student) => {
     const status = getOverallStatus(student.subjects);
@@ -95,7 +113,60 @@ const ClassMarksPage: React.FC<Props> = ({ darkMode, setDarkMode }) => {
         return true;
     }
   });
+  const paginatedStudents = filteredStudents.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage,
+  );
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleDownloadExcel =  async () => {
+    const data = filteredStudents.map((s) => {
+      const row: any = {
+        Name: s.name,
+        "Roll No": s.rollNo,
+      };
+      cls.subjects.forEach((sub) => {
+        row[sub] = getMark(s.subjects, sub);
+      });
+      row.Status = getOverallStatus(s.subjects);
+      row.Grade = getOverallGrade(s.subjects);
+      return row;
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Marks");
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+    const file = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    saveAs(file, `${cls.className}_${filter}_marks.xlsx`);
+    await AuditService.log(
+      "DOWNLOAD",
+      "CLASS_MARKS",
+      cls.id,
+      `Downloaded Excel (${filter})`,
+    );
+
+    setSnackbar({
+      open: true,
+      message: "Excel file downloaded successfully",
+      severity: "success",
+    });
+  };
   return (
     <>
       <Navbar
@@ -110,12 +181,20 @@ const ClassMarksPage: React.FC<Props> = ({ darkMode, setDarkMode }) => {
           </Button>
 
           <Box display="flex" justifyContent="flex-end" mb={2}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleDownloadExcel}
+              sx={{ mr: 2 }}
+            >
+              Download Excel
+            </Button>
             <Select
               value={filter}
               onChange={(e) => setFilter(e.target.value as FilterType)}
               startAdornment={<FilterListIcon sx={{ mr: 1, color: "#fff" }} />}
               sx={{
-                color: "#fff", 
+                color: "#fff",
                 minWidth: 220,
 
                 "& .MuiOutlinedInput-notchedOutline": {
@@ -129,7 +208,7 @@ const ClassMarksPage: React.FC<Props> = ({ darkMode, setDarkMode }) => {
                 },
 
                 "& .MuiSvgIcon-root": {
-                  color: "#fff", 
+                  color: "#fff",
                 },
               }}
             >
@@ -169,7 +248,7 @@ const ClassMarksPage: React.FC<Props> = ({ darkMode, setDarkMode }) => {
               </TableHead>
 
               <TableBody>
-                {filteredStudents.map((s) => {
+                {paginatedStudents.map((s) => {
                   const status = getOverallStatus(s.subjects);
                   const grade = getOverallGrade(s.subjects);
 
@@ -202,6 +281,15 @@ const ClassMarksPage: React.FC<Props> = ({ darkMode, setDarkMode }) => {
                 })}
               </TableBody>
             </Table>
+            <TablePagination
+              component="div"
+              count={filteredStudents.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 25]}
+            />
           </TableContainer>
         </Box>
       </Box>

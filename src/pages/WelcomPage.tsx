@@ -127,7 +127,7 @@ const WelcomePage = () => {
             gap: 2,
           }}
         >
-          <Box className="slider-track">
+          <Box className="slider-track" >
             {[...toppersByClass, ...toppersByClass].map((card, index) => (
               <Paper className="topper-card" key={index} elevation={6}>
                 <Typography variant="h6" fontWeight="bold" mb={2}>

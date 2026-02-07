@@ -1,12 +1,38 @@
 import axios from "axios";
-import { ClassModel,CreateClass } from "../models/Class";
+import { ClassModel, CreateClass } from "../models/Class";
 import { Student } from "../models/Student";
 import { User } from "../models/User";
+import { Teacher } from "../models/Teacher";
 
 const API = "http://localhost:3000";
 
 export const CrudService = {
+  /* ---------------- GENERIC METHODS ---------------- */
+
+  get: async (url: string) => {
+    const res = await axios.get(`${API}${url}`);
+    return res.data;
+  },
+
+  post: async (url: string, data: any) => {
+    const res = await axios.post(`${API}${url}`, data);
+    return res.data;
+  },
+
+  put: async (url: string, data: any) => {
+    const res = await axios.put(`${API}${url}`, data);
+    return res.data;
+  },
+
+  delete: async (url: string) => {
+    const res = await axios.delete(`${API}${url}`);
+    return res.data;
+  },
+
+  /* ---------------- AUTH ---------------- */
+
   login: async (username: string, password: string) => {
+    // ADMIN
     const usersRes = await axios.get<User[]>(`${API}/users`);
     const admin = usersRes.data.find(
       (u) => u.username === username && u.password === password
@@ -16,19 +42,34 @@ export const CrudService = {
       return { role: "admin" as const };
     }
 
+    // TEACHER
+    const teachersRes = await axios.get<Teacher[]>(
+      `${API}/teachers?teacherNo=${username}&password=${password}`
+    );
+
+    if (teachersRes.data.length) {
+      return {
+        role: "teacher" as const,
+        teacher: teachersRes.data[0],
+      };
+    }
+
+    // STUDENT
     const studentsRes = await axios.get<Student[]>(
       `${API}/students?rollNo=${username}&password=${password}`
     );
 
-    if (studentsRes.data.length > 0) {
+    if (studentsRes.data.length) {
       return {
         role: "student" as const,
-        rollNo: studentsRes.data[0].rollNo
+        rollNo: studentsRes.data[0].rollNo,
       };
     }
 
     return null;
   },
+
+  /* ---------------- CLASS HELPERS ---------------- */
 
   getClasses: async () => {
     const res = await axios.get<ClassModel[]>(`${API}/classes`);
@@ -44,11 +85,7 @@ export const CrudService = {
   deleteClass: async (id: string) =>
     axios.delete(`${API}/classes/${id}`),
 
- getStudentByRoll: async (rollNo: string): Promise<Student | null> => {
-  const res = await axios.get(`${API}/students?rollNo=${rollNo}`);
-  return res.data[0] || null;
-},
-
+  /* ---------------- STUDENT HELPERS ---------------- */
 
   getStudentsByClass: async (classId: string) => {
     const res = await axios.get<Student[]>(
@@ -56,18 +93,4 @@ export const CrudService = {
     );
     return res.data;
   },
-  getStudentById: async (id: string) => {
-  const res = await axios.get(`${API}/students/${id}`);
-  return res.data;
-},
-
-
-  addStudent: async (data: Student) =>
-    axios.post(`${API}/students`, data),
-
-  updateStudent: async (id: number, data: Student) =>
-    axios.put(`${API}/students/${id}`, data),
-
-  deleteStudent: async (id: number) =>
-    axios.delete(`${API}/students/${id}`)
 };

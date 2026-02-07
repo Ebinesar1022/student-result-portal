@@ -7,22 +7,41 @@ import {
   Chip,
   Stack,
   Box,
+  Autocomplete,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { CrudService } from "../../api/CrudService";
 import "../../styles/StudentDialog.css";
+import OTP from "../common/OTP";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   refresh: () => void;
+  setSnackbar: React.Dispatch<
+    React.SetStateAction<{
+      open: boolean;
+      message: string;
+      severity: "success" | "error" | "warning" | "info";
+    }>
+  >;
 }
 
-const AddClassDialog = ({ open, onClose, refresh }: Props) => {
+const AddClassDialog = ({ open, onClose, refresh, setSnackbar }: Props) => {
   const [className, setClassName] = useState("");
   const [classCode, setClassCode] = useState("");
   const [subject, setSubject] = useState("");
+  const [examName, setExamName] = useState<string | null>(null);
   const [subjects, setSubjects] = useState<string[]>([]);
+  const [otpOpen, setOtpOpen] = useState(false);
+  const EXAM_OPTIONS = [
+    "Unit Test 1",
+    "Unit Test 2",
+    "Mid Term",
+    "Quarterly Exam",
+    "Half Yearly",
+    "Annual Exam",
+  ];
 
   useEffect(() => {
     if (open) {
@@ -55,18 +74,27 @@ const AddClassDialog = ({ open, onClose, refresh }: Props) => {
       return;
     }
     if (!/^[A-Z]{3}\d{2}$/.test(classCode)) {
-  alert("Class Code must be like STU07");
-  return;
-}
-
+      alert("Class Code must be like STU07");
+      return;
+    }
+    if (!examName) {
+      alert("Please select exam name");
+      return;
+    }
 
     await CrudService.addClass({
       className: className.trim(),
-       classCode,
+      classCode,
       subjects,
+      examName,
     });
 
     refresh();
+    setSnackbar({
+      open: true,
+      message: "Class added successfully",
+      severity: "success",
+    });
     onClose();
   };
 
@@ -89,7 +117,14 @@ const AddClassDialog = ({ open, onClose, refresh }: Props) => {
           onChange={(e) => setClassCode(e.target.value.toUpperCase())}
           margin="normal"
         />
-
+        <Autocomplete
+          options={EXAM_OPTIONS}
+          value={examName}
+          onChange={(e, newValue) => setExamName(newValue)}
+          renderInput={(params) => (
+            <TextField {...params} label="Exam Name" margin="normal" required />
+          )}
+        />
         <Stack direction="row" spacing={1} mt={2}>
           <TextField
             label="Subject"
@@ -113,13 +148,29 @@ const AddClassDialog = ({ open, onClose, refresh }: Props) => {
           <Button
             variant="contained"
             sx={{ mt: 3 }}
-            onClick={addClass}
+            onClick={() => {
+              const adminEmail = localStorage.getItem("adminEmail");
+              if (!adminEmail) {
+                alert("Admin email not verified. Go to Admin Profile.");
+                return;
+              }
+              setOtpOpen(true); // 🔥 trigger OTP
+            }}
             fullWidth
           >
             Save
           </Button>
         </Box>
       </DialogContent>
+      <OTP
+        open={otpOpen}
+        email={localStorage.getItem("adminEmail")!}
+        onClose={() => setOtpOpen(false)}
+        onSuccess={async () => {
+          await addClass();
+          setOtpOpen(false);
+        }}
+      />
     </Dialog>
   );
 };

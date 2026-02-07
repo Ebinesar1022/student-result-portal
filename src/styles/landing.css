@@ -1,7 +1,7 @@
 /* Full screen gradient */
 .landing-wrapper {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1d2671, #c33764);
+  background: linear-gradient(135deg, #1d2671, #b9617d);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -9,14 +9,25 @@
   color: white;
   overflow: hidden;
 }
+.bgimg {
+  min-height: 100vh;
+  background-image: url("../assets/bg.jpg");
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 .landing-wrap {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1d2671, #c33764);
+  background: linear-gradient(135deg, #1d2671, #0f0b0c);
   color: white;
   overflow: hidden;
 }
 
-/* Title animation */
 .landing-title {
   font-family: "Permanent Marker", cursive !important;
   font-size: 40px !important;
@@ -45,7 +56,7 @@
 .landing-stu {
   min-height: 100vh;
   background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
- 
+
   color: white;
   overflow: hidden;
 }

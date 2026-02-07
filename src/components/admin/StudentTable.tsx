@@ -7,9 +7,13 @@ import {
   IconButton,
   TableContainer,
   Paper,
+  Button, Box,
 } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import StudentDetailsDrawer from "../student/StudentDetailsDrawer";
+import React, { useState } from "react";
 import { Student } from "../../models/Student";
 import "../../styles/landing.css";
 
@@ -22,7 +26,16 @@ const StudentTable=({
   onDelete: (id: number) => void;
   onEdit: (s: Student) => void;
 })=> {
+  const [openDetails, setOpenDetails] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+
+  // const handleOpenDetails = (student: Student) => {
+  //   setSelectedStudent(student);
+  //   setOpenDetails(true);
+  // };
+
   return (
+    <React.Fragment>
      <TableContainer
         component={Paper}
         sx={{
@@ -49,7 +62,7 @@ const StudentTable=({
             <TableCell>{s.rollNo}</TableCell>
             <TableCell>
               <IconButton onClick={() => onEdit(s)}>
-                <EditIcon />
+                <EditIcon sx={{color:"blue"}} />
               </IconButton>
 
               <IconButton
@@ -58,14 +71,30 @@ const StudentTable=({
                   onDelete(s.id);
                 }}
               >
-                <DeleteIcon />
+                <DeleteIcon sx={{color:"red"}} />
               </IconButton>
+               <Button
+                variant="outlined"
+                sx={{ mt: 2 }}
+                onClick={() => {setOpenDetails(true); setSelectedStudent(s);}}
+                startIcon={<InfoIcon />}
+              >
+                DETAILS
+              </Button>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
     </TableContainer>
+    {selectedStudent && (
+  <StudentDetailsDrawer
+    open={openDetails}
+    onClose={() => setOpenDetails(false)}
+    student={selectedStudent}
+  />
+)}
+</React.Fragment>
   );
 }
 export default StudentTable;

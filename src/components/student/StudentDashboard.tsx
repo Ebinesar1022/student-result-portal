@@ -20,6 +20,13 @@ import autoTable from "jspdf-autotable";
 
 interface Props {
   rollNo: string;
+  setSnackbar: React.Dispatch<
+    React.SetStateAction<{
+      open: boolean;
+      message: string;
+      severity: "success" | "error" | "warning" | "info";
+    }>
+  >;
 }
 
 const PASS_MARK = 35;
@@ -28,8 +35,7 @@ const PASS_MARK = 35;
 //   return Math.round(total / subjects.length);
 // };
 
-
-const StudentDashboard: React.FC<Props> = ({ rollNo }) => {
+const StudentDashboard: React.FC<Props> = ({ rollNo, setSnackbar }) => {
   const [student, setStudent] = useState<Student | null>(null);
   const [openDetails, setOpenDetails] = useState(false);
   const [classes, setClasses] = useState<any[]>([]);
@@ -40,6 +46,11 @@ const StudentDashboard: React.FC<Props> = ({ rollNo }) => {
       const cls = await CrudService.getClasses();
       setStudent(res);
       setClasses(cls);
+      setSnackbar({
+        open: true,
+        message: "Student logged in successfully",
+        severity: "success",
+      });
     };
     load();
   }, [rollNo]);
@@ -50,6 +61,8 @@ const StudentDashboard: React.FC<Props> = ({ rollNo }) => {
 
   const className =
     classes.find((c) => c.id === student.classId)?.className || "N/A";
+    const cls = classes.find((c) => c.id === student.classId);
+
 
   const getStatus = (marks: number) => (marks >= PASS_MARK ? "PASS" : "FAIL");
 
@@ -70,6 +83,9 @@ const StudentDashboard: React.FC<Props> = ({ rollNo }) => {
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
     doc.text("MARKSHEET", 105, 28, { align: "center" });
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Exam Name: ${cls?.examName || "N/A"}`, 105, 38, { align: "center" });
 
     doc.setLineWidth(0.5);
     doc.line(20, 32, 190, 32);
@@ -142,8 +158,10 @@ const StudentDashboard: React.FC<Props> = ({ rollNo }) => {
                 DETAILS
               </Button>
             </Box>
+            <Typography variant="h6" sx={{ mb: 1 }}>
+              Exam: <strong>{cls.examName}</strong>
+            </Typography>
 
-          
             <Typography
               mt={2}
               color={isPass ? "green" : "red"}
@@ -154,7 +172,6 @@ const StudentDashboard: React.FC<Props> = ({ rollNo }) => {
 
             <Divider sx={{ mb: 4 }} />
 
-          
             <Grid container justifyContent="center">
               <Box display="flex" gap={2} flexWrap="wrap">
                 {student.subjects.map((sub) => {
@@ -191,7 +208,6 @@ const StudentDashboard: React.FC<Props> = ({ rollNo }) => {
                 Download Marksheet (PDF)
               </Button>
             </Box>
-
 
             <StudentDetailsDrawer
               open={openDetails}

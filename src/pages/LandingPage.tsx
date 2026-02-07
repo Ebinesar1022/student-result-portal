@@ -18,7 +18,7 @@ const LandingPage = () => {
     <React.Fragment>
     <Box className="landing-wrapper">
       <Typography className="landing-title">
-         Welcom
+         Welcome
       </Typography>
 
       <Typography className="landing-subtitle">

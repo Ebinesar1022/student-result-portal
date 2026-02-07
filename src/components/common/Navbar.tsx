@@ -45,7 +45,7 @@ const Navbar: React.FC<NavbarProps> = ({
           {darkMode ? <DarkModeIcon /> : <LightModeIcon />}
           <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
         </Box>
-
+ 
         {showLogout && (
           <Button
             color="inherit"

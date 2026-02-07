@@ -101,8 +101,6 @@ const AddStudentDialog = ({
 
               if (/^\d*$/.test(value)) {
                 setStudentNumber(value);
-
-                // 🔑 Auto-generate password
                 const generatedPassword =
                   `${classCode}${value.padStart(3, "0")}`.toLowerCase();
 

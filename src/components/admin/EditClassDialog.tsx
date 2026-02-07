@@ -16,13 +16,21 @@ interface Props {
   onClose: () => void;
   selectedClass: ClassModel | null;
   refresh: () => void;
+  setSnackbar: React.Dispatch<
+    React.SetStateAction<{
+      open: boolean;
+      message: string;
+      severity: "success" | "error" | "warning" | "info";
+    }>
+  >;
 }
 
 const EditClassDialog = ({
   open,
   onClose,
   selectedClass,
-  refresh
+  refresh,
+  setSnackbar
 }: Props) => {
   const [className, setClassName] = useState("");
   const [subjectInput, setSubjectInput] = useState("");
@@ -119,7 +127,14 @@ const EditClassDialog = ({
         <Button
           variant="contained"
           sx={{ mt: 3 }}
-          onClick={updateClass}
+          onClick={async () => {
+            await updateClass();
+            setSnackbar({
+              open: true,
+              message: "Class updated successfully",
+              severity: "success",
+            });
+          }}
           disabled={!className.trim() || subjects.length === 0}
         >
           Update

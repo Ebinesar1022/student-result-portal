@@ -8,5 +8,6 @@ export interface ClassModel {
   className: string;
   classCode: string;
   subjects: string[];
+  examName: string;
 }
 export type CreateClass = Omit<ClassModel, "id">;
