@@ -7,10 +7,1001 @@
       "password": "admin123"
     }
   ],
-  "teachers": [],
-  "classes": [],
-  "students": [],
-  "teacherAssignments": [],
-  "marks": [],
-  "audit": []
+  "teachers": [
+    {
+      "id": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "name": "John",
+      "teacherNo": "STAFF001",
+      "password": "staff001",
+      "phone": "345678987t345678",
+      "email": "345678iuytrfd",
+      "gender": "Female",
+      "maritalStatus": "Single"
+    },
+    {
+      "id": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "name": "Ebi",
+      "teacherNo": "STAFF002",
+      "password": "staff002"
+    }
+  ],
+  "classes": [
+    {
+      "id": "5791",
+      "className": "3rd Standard",
+      "classCode": "STU03",
+      "subjects": [
+        "Tamil",
+        "English",
+        "Science",
+        "Social"
+      ],
+      "examName": "Unit Test 1"
+    }
+  ],
+  "students": [
+    {
+      "id": "3a0e",
+      "name": "Ebii",
+      "password": "stu03001",
+      "phone": "8056915752",
+      "email": "ebinesardbc28@gmail.com",
+      "gender": "Male",
+      "section": [
+        "A"
+      ],
+      "state": "Tamil Nadu",
+      "district": "Tiruvannamalai",
+      "classId": "5791",
+      "rollNo": "STU03001",
+      "subjects": [
+        {
+          "name": "Tamil",
+          "marks": 0
+        },
+        {
+          "name": "English",
+          "marks": 0
+        },
+        {
+          "name": "Science",
+          "marks": 0
+        },
+        {
+          "name": "Social",
+          "marks": 0
+        }
+      ],
+      "photo": "data:image/avif;base64,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"
+    }
+  ],
+  "teacherAssignments": [
+    {
+      "id": "a65f6a8c-8aa0-43a2-8eeb-c58b9d5374f2",
+      "teacherId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "classId": "5791",
+      "subject": "Tamil"
+    },
+    {
+      "id": "7fbb67a1-1752-4eba-a979-1fa7b73329df",
+      "teacherId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "classId": "5791",
+      "subject": "English"
+    },
+    {
+      "id": "7e10e25c-1c7d-451c-9d3a-54866061a7fb",
+      "teacherId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "classId": "5791",
+      "subject": "Maths"
+    },
+    {
+      "id": "3748c3db-9149-4f2b-8cd1-9f86ede3af4c",
+      "teacherId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "classId": "5791",
+      "subject": "Science"
+    },
+    {
+      "id": "842ff702-0700-47e8-8aef-c9408eb2adac",
+      "teacherId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "classId": null,
+      "subject": "Tamil"
+    }
+  ],
+  "marks": [
+    {
+      "id": "e50d",
+      "studentId": "3a0e",
+      "classId": "5791",
+      "subject": "English",
+      "marks": 80
+    },
+    {
+      "id": "a93e",
+      "studentId": "3a0e",
+      "classId": "5791",
+      "subject": "Science",
+      "marks": 100
+    },
+    {
+      "id": "1350",
+      "studentId": "3a0e",
+      "classId": "5791",
+      "subject": "Maths",
+      "marks": 10
+    },
+    {
+      "id": "6c153d97-4d8a-433e-9c33-d077819d798e",
+      "studentId": null,
+      "classId": null,
+      "subject": "Tamil",
+      "marks": 100,
+      "teacherId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112"
+    },
+    {
+      "id": "6344e8cf-bc9e-4888-b771-cf698894a5b5",
+      "studentId": null,
+      "classId": null,
+      "subject": "Tamil",
+      "marks": 100,
+      "teacherId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112"
+    }
+  ],
+  "audit": [
+    {
+      "id": "da51",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T06:34:36.070Z"
+    },
+    {
+      "id": "608c",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T06:35:37.918Z"
+    },
+    {
+      "id": "48a7",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T06:35:49.025Z"
+    },
+    {
+      "id": "e07f",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T06:36:08.957Z"
+    },
+    {
+      "id": "b6f3",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "Teacher John logged in",
+      "createdAt": "2026-02-10T06:36:24.376Z"
+    },
+    {
+      "id": "eb4b",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "TEACHER John logged out",
+      "createdAt": "2026-02-10T06:36:52.508Z"
+    },
+    {
+      "id": "adfa",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T06:37:13.476Z"
+    },
+    {
+      "id": "73fb",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T06:50:38.544Z"
+    },
+    {
+      "id": "bce0",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "Teacher John logged in",
+      "createdAt": "2026-02-10T06:50:52.565Z"
+    },
+    {
+      "id": "d828",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "UPDATE",
+      "entityType": "MARK",
+      "entityId": "55ea",
+      "description": "Updated Tamil mark for student 3a0e",
+      "changes": [
+        {
+          "field": "marks",
+          "oldValue": 25,
+          "newValue": 78
+        }
+      ],
+      "createdAt": "2026-02-10T06:51:01.916Z"
+    },
+    {
+      "id": "4081",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "TEACHER John logged out",
+      "createdAt": "2026-02-10T06:51:05.822Z"
+    },
+    {
+      "id": "0a2f",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T06:51:17.633Z"
+    },
+    {
+      "id": "d464",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T07:39:32.503Z"
+    },
+    {
+      "id": "ca7d",
+      "actorType": "TEACHER",
+      "actorId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "actorName": "Ebi",
+      "actorCode": "STAFF002",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "description": "Teacher Ebi logged in",
+      "createdAt": "2026-02-10T07:39:49.430Z"
+    },
+    {
+      "id": "9308",
+      "actorType": "TEACHER",
+      "actorId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "actorName": "Ebi",
+      "actorCode": "STAFF002",
+      "action": "UPDATE",
+      "entityType": "MARK",
+      "entityId": "e50d",
+      "description": "Updated English mark for student Ebii",
+      "changes": [
+        {
+          "field": "marks",
+          "oldValue": 89,
+          "newValue": 80
+        }
+      ],
+      "createdAt": "2026-02-10T07:39:58.577Z"
+    },
+    {
+      "id": "3ba5",
+      "actorType": "TEACHER",
+      "actorId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "actorName": "Ebi",
+      "actorCode": "STAFF002",
+      "action": "UPDATE",
+      "entityType": "MARK",
+      "entityId": "1350",
+      "description": "Updated Maths mark for student Ebii",
+      "changes": [
+        {
+          "field": "marks",
+          "oldValue": 89,
+          "newValue": 10
+        }
+      ],
+      "createdAt": "2026-02-10T07:40:08.247Z"
+    },
+    {
+      "id": "0658",
+      "actorType": "TEACHER",
+      "actorId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "actorName": "Ebi",
+      "actorCode": "STAFF002",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "description": "TEACHER Ebi logged out",
+      "createdAt": "2026-02-10T07:40:11.240Z"
+    },
+    {
+      "id": "58dd",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T07:40:23.421Z"
+    },
+    {
+      "id": "955d",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T07:42:35.922Z"
+    },
+    {
+      "id": "fa59",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "Teacher John logged in",
+      "createdAt": "2026-02-10T07:42:50.464Z"
+    },
+    {
+      "id": "5797",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "DELETE",
+      "entityType": "MARK",
+      "entityId": "55ea",
+      "description": "Deleted Tamil mark for student Ebii",
+      "changes": [
+        {
+          "field": "marks",
+          "oldValue": 78,
+          "newValue": null
+        }
+      ],
+      "createdAt": "2026-02-10T07:42:56.872Z"
+    },
+    {
+      "id": "9726",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "TEACHER John logged out",
+      "createdAt": "2026-02-10T07:43:01.289Z"
+    },
+    {
+      "id": "608f",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T07:43:13.873Z"
+    },
+    {
+      "id": "3a8e",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T10:02:37.525Z"
+    },
+    {
+      "id": "b04b",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "Teacher John logged in",
+      "createdAt": "2026-02-10T10:02:50.941Z"
+    },
+    {
+      "id": "9b47",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "TEACHER John logged out",
+      "createdAt": "2026-02-10T10:02:57.926Z"
+    },
+    {
+      "id": "c0ea",
+      "actorType": "TEACHER",
+      "actorId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "actorName": "Ebi",
+      "actorCode": "STAFF002",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "description": "Teacher Ebi logged in",
+      "createdAt": "2026-02-10T10:03:17.303Z"
+    },
+    {
+      "id": "fb28",
+      "actorType": "TEACHER",
+      "actorId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "actorName": "Ebi",
+      "actorCode": "STAFF002",
+      "action": "UPDATE",
+      "entityType": "MARK",
+      "entityId": "a93e",
+      "description": "Updated Science mark for student Ebii",
+      "changes": [
+        {
+          "field": "marks",
+          "oldValue": 100,
+          "newValue": 100
+        }
+      ],
+      "createdAt": "2026-02-10T10:03:30.492Z"
+    },
+    {
+      "id": "0d63",
+      "actorType": "TEACHER",
+      "actorId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "actorName": "Ebi",
+      "actorCode": "STAFF002",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "a37e5226-758d-4594-82df-6ed3f3017c8e",
+      "description": "TEACHER Ebi logged out",
+      "createdAt": "2026-02-10T10:03:35.163Z"
+    },
+    {
+      "id": "9249",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T10:03:46.290Z"
+    },
+    {
+      "id": "f72b",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "CREATE",
+      "entityType": "CLASS",
+      "entityId": "bf30b3e1-591c-460a-82d5-f2b1c8fb9a5d",
+      "description": "Created class 4th Standard (STU04) with subjects: Tamil, GK, EVS for Quarterly Exam",
+      "createdAt": "2026-02-10T10:19:39.178Z"
+    },
+    {
+      "id": "85a8",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T10:45:07.788Z"
+    },
+    {
+      "id": "eb61",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T10:45:18.004Z"
+    },
+    {
+      "id": "ac1d",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T10:47:01.576Z"
+    },
+    {
+      "id": "943d",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "UPDATE",
+      "entityType": "CLASS",
+      "entityId": "bf30b3e1-591c-460a-82d5-f2b1c8fb9a5d",
+      "description": "Removed subject(s): GK, EVS, PET",
+      "changes": [
+        {
+          "field": "subjects",
+          "oldValue": [
+            "Tamil",
+            "GK",
+            "EVS",
+            "PET"
+          ],
+          "newValue": [
+            "Tamil"
+          ]
+        }
+      ],
+      "createdAt": "2026-02-10T10:49:29.297Z"
+    },
+    {
+      "id": "2ba9",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T10:50:26.488Z"
+    },
+    {
+      "id": "683b",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "Teacher John logged in",
+      "createdAt": "2026-02-10T10:50:52.332Z"
+    },
+    {
+      "id": "aabf",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "TEACHER John logged out",
+      "createdAt": "2026-02-10T10:51:37.921Z"
+    },
+    {
+      "id": "7bf5",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T10:51:51.847Z"
+    },
+    {
+      "id": "fa24",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T10:52:17.995Z"
+    },
+    {
+      "id": "6105",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "Teacher John logged in",
+      "createdAt": "2026-02-10T10:52:29.938Z"
+    },
+    {
+      "id": "e266",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "CREATE",
+      "entityType": "MARK",
+      "entityId": "6c153d97-4d8a-433e-9c33-d077819d798e",
+      "description": "Entered Tamil mark for student 656c",
+      "createdAt": "2026-02-10T10:52:43.301Z"
+    },
+    {
+      "id": "a384",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "TEACHER John logged out",
+      "createdAt": "2026-02-10T10:52:46.969Z"
+    },
+    {
+      "id": "9593",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T10:52:58.947Z"
+    },
+    {
+      "id": "fb84",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T10:54:18.486Z"
+    },
+    {
+      "id": "588e",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T10:54:33.097Z"
+    },
+    {
+      "id": "7f10",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T10:55:07.436Z"
+    },
+    {
+      "id": "cb02",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "Teacher John logged in",
+      "createdAt": "2026-02-10T10:55:21.647Z"
+    },
+    {
+      "id": "195d",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "CREATE",
+      "entityType": "MARK",
+      "entityId": "6344e8cf-bc9e-4888-b771-cf698894a5b5",
+      "description": "Entered Tamil mark for student Tanii",
+      "createdAt": "2026-02-10T10:55:29.909Z"
+    },
+    {
+      "id": "3b31",
+      "actorType": "TEACHER",
+      "actorId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "actorName": "John",
+      "actorCode": "STAFF001",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "e0abdfe6-aeeb-40f0-9d0b-cd7789c79112",
+      "description": "TEACHER John logged out",
+      "createdAt": "2026-02-10T10:55:37.334Z"
+    },
+    {
+      "id": "e0ce",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T10:55:50.062Z"
+    },
+    {
+      "id": "18c0",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T11:00:10.033Z"
+    },
+    {
+      "id": "ad09",
+      "actorType": "STUDENT",
+      "actorId": "STU04001",
+      "actorName": "STU04001",
+      "actorCode": "STU04001",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "STU04001",
+      "description": "Student STU04001 logged in",
+      "createdAt": "2026-02-10T11:00:24.587Z"
+    },
+    {
+      "id": "ecaa",
+      "actorType": "STUDENT",
+      "actorId": "STU04001",
+      "actorName": "STU04001",
+      "actorCode": "STU04001",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "STU04001",
+      "description": "STUDENT STU04001 logged out",
+      "createdAt": "2026-02-10T11:00:30.371Z"
+    },
+    {
+      "id": "af25",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T11:00:40.553Z"
+    },
+    {
+      "id": "c895",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "CREATE",
+      "entityType": "CLASS",
+      "entityId": "fc74b110-c23d-4ab2-b98a-24e78c328526",
+      "description": "Created class 1st Standard (STU01) with subjects: Sleep for Annual Exam",
+      "createdAt": "2026-02-10T11:10:01.239Z"
+    },
+    {
+      "id": "a587",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "DELETE",
+      "entityType": "CLASS",
+      "entityId": "fc74b110-c23d-4ab2-b98a-24e78c328526",
+      "description": "Deleted class 1st Standard with 0 students",
+      "changes": [
+        {
+          "field": "class",
+          "oldValue": {
+            "className": "1st Standard",
+            "classCode": "STU01",
+            "subjects": [
+              "Sleep"
+            ],
+            "examName": "Annual Exam",
+            "studentCount": 0
+          },
+          "newValue": null
+        }
+      ],
+      "createdAt": "2026-02-10T11:10:26.425Z"
+    },
+    {
+      "id": "4ca6",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T11:12:46.344Z"
+    },
+    {
+      "id": "193a",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "DOWNLOAD",
+      "entityType": "CLASS_MARKS",
+      "entityId": "5791",
+      "description": "Downloaded 3rd Standard marks (ALL)",
+      "changes": [
+        {
+          "field": "filter",
+          "oldValue": null,
+          "newValue": "ALL"
+        },
+        {
+          "field": "studentCount",
+          "oldValue": null,
+          "newValue": 1
+        }
+      ],
+      "createdAt": "2026-02-10T12:02:04.779Z"
+    },
+    {
+      "id": "6b45",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "ADMIN Admin logged out",
+      "createdAt": "2026-02-10T12:09:14.054Z"
+    },
+    {
+      "id": "627a",
+      "actorType": "STUDENT",
+      "actorId": "STU03001",
+      "actorName": "STU03001",
+      "actorCode": "STU03001",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "STU03001",
+      "description": "Student STU03001 logged in",
+      "createdAt": "2026-02-10T12:09:26.486Z"
+    },
+    {
+      "id": "8a8f",
+      "actorType": "STUDENT",
+      "actorId": "3a0e",
+      "actorName": "Ebii",
+      "actorCode": "STU03001",
+      "action": "DOWNLOAD",
+      "entityType": "MARKSHEET",
+      "entityId": "3a0e",
+      "description": "Downloaded marksheet for Unit Test 1",
+      "changes": [
+        {
+          "field": "subjects",
+          "oldValue": null,
+          "newValue": 4
+        },
+        {
+          "field": "result",
+          "oldValue": null,
+          "newValue": "FAIL"
+        }
+      ],
+      "createdAt": "2026-02-10T12:09:37.881Z"
+    },
+    {
+      "id": "8c42",
+      "actorType": "STUDENT",
+      "actorId": "STU03001",
+      "actorName": "STU03001",
+      "actorCode": "STU03001",
+      "action": "LOGOUT",
+      "entityType": "AUTH",
+      "entityId": "STU03001",
+      "description": "STUDENT STU03001 logged out",
+      "createdAt": "2026-02-10T12:09:44.354Z"
+    },
+    {
+      "id": "b02b",
+      "actorType": "ADMIN",
+      "actorId": "ADMIN",
+      "actorName": "Admin",
+      "actorCode": "ADMIN",
+      "action": "LOGIN",
+      "entityType": "AUTH",
+      "entityId": "ADMIN",
+      "description": "Admin logged in",
+      "createdAt": "2026-02-10T12:09:55.351Z"
+    }
+  ]
 }

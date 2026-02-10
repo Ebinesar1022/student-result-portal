@@ -28,6 +28,8 @@ import { CrudService } from "../../api/CrudService";
 import { ClassModel } from "../../models/Class";
 import "../../styles/landing.css";
 import AdminProfile from "./AdminProfile";
+import { auditLog } from "../../utils/auditlog";
+import { getCurrentUser } from "../../utils/currentUser";
 interface Props {
   setSnackbar: React.Dispatch<
     React.SetStateAction<{
@@ -66,14 +68,48 @@ const ClassManager: React.FC<Props> = ({ setSnackbar }) => {
     load();
   }, []);
 
-  const deleteClassWithStudents = async (classId: string) => {
-    const students = await CrudService.getStudentsByClass(classId);
+  const deleteClassWithStudents = async (cls: ClassModel) => {
+    const user = getCurrentUser();
 
+    // 🔴 Fetch students before deletion (for audit)
+    const students = await CrudService.getStudentsByClass(cls.id);
+
+    // 🧾 AUDIT — CLASS DELETE
+    await auditLog({
+      actorType: "ADMIN",
+      actorId: user.id,
+      actorName: user.name,
+      actorCode: user.code,
+
+      action: "DELETE",
+      entityType: "CLASS",
+      entityId: cls.id,
+
+      description: `Deleted class ${cls.className} with ${students.length} students`,
+
+      changes: [
+        {
+          field: "class",
+          oldValue: {
+            className: cls.className,
+            classCode: cls.classCode,
+            subjects: cls.subjects,
+            examName: cls.examName,
+            studentCount: students.length,
+          },
+          newValue: null,
+        },
+      ],
+    });
+
+    // 🔴 Delete students
     await Promise.all(
       students.map((s) => CrudService.delete(`/students/${s.id}`)),
     );
 
-    await CrudService.delete(`/classes/${classId}`);
+    // 🔴 Delete class
+    await CrudService.delete(`/classes/${cls.id}`);
+
     load();
   };
 
@@ -284,7 +320,7 @@ const ClassManager: React.FC<Props> = ({ setSnackbar }) => {
           email={localStorage.getItem("adminEmail")!}
           onClose={() => setOtpOpen(false)}
           onSuccess={async () => {
-            await deleteClassWithStudents(deleteClass.id);
+            await deleteClassWithStudents(deleteClass);
             setSnackbar({
               open: true,
               message: "Class deleted successfully",

@@ -33,7 +33,7 @@ const ROWS_PER_PAGE = 5;
 
 const ClassStudentsPage: React.FC<Props> = ({ setSnackbar }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [selectedStudentId, setSelectedStudentId] = useState<number | null>(
+  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(
     null,
   );
 

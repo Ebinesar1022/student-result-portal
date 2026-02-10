@@ -1,7 +1,5 @@
 import Navbar from "../components/common/Navbar";
-import ClassManager from "../components/admin/ClassManager";
-import "../styles/admin.css";
-
+import { Outlet } from "react-router-dom";
 interface Props {
   darkMode: boolean;
   setDarkMode: (value: boolean) => void;
@@ -13,16 +11,16 @@ interface Props {
     }>
   >;
 }
-const AdminPage: React.FC<Props> = ({ darkMode, setDarkMode, setSnackbar }) => {
-  
+
+const AdminPage = ({ darkMode, setDarkMode, setSnackbar }: Props) => {
   return (
     <>
       <Navbar
-        title="Admin Panel"
+        title="Admin Dashboard"
         darkMode={darkMode}
         setDarkMode={setDarkMode}
       />
-      <ClassManager setSnackbar={setSnackbar} />
+      <Outlet />
     </>
   );
 };

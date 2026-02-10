@@ -23,7 +23,7 @@ const StudentTable=({
   onEdit,
 }: {
   students: Student[];
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
   onEdit: (s: Student) => void;
 })=> {
   const [openDetails, setOpenDetails] = useState(false);

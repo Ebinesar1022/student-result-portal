@@ -6,6 +6,13 @@
   background: linear-gradient(135deg, #1f4037, #99f2c8);
   color: #fff;
 }
+.welcome-con {
+  display: grid;
+  min-height: 100vh;
+  padding: 60px;
+  background: linear-gradient(135deg, #356f60, #99f2c8);
+  color: #fff;
+}
 
 .left-section {
   display: flex;

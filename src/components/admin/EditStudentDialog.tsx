@@ -71,18 +71,55 @@ const EditStudentDialog = ({ open, onClose, data, refresh }: any) => {
   const SECTIONS = ["A", "B", "C"];
 
   useEffect(() => {
-    setStudent(data);
-    setMarks(data.subjects || []);
+    if (!data?.id || !data?.classId) return;
+
+    const loadMarks = async () => {
+      const marksRes = await CrudService.get<any[]>(
+        `/marks?studentId=${data.id}&classId=${data.classId}`,
+      );
+
+      // If marks exist → use them
+      if (marksRes.length) {
+        setMarks(
+          marksRes.map((m) => ({
+            name: m.subject,
+            marks: m.marks,
+          })),
+        );
+      } else {
+        // fallback to subjects structure
+        setMarks(data.subjects || []);
+      }
+    };
+
+    loadMarks();
   }, [data]);
 
   const update = async () => {
-    await CrudService.updateStudent(student.id, {
-      ...student,
-      subjects: marks,
-    });
+    for (const m of marks) {
+      const existing = await CrudService.get<any[]>(
+        `/marks?studentId=${student.id}&subject=${m.name}&classId=${student.classId}`,
+      );
+
+      if (existing.length) {
+        await CrudService.put(`/marks/${existing[0].id}`, {
+          ...existing[0],
+          marks: m.marks,
+        });
+      } else {
+        await CrudService.post(`/marks`, {
+          studentId: student.id,
+          classId: student.classId,
+          subject: m.name,
+          marks: m.marks,
+        });
+      }
+    }
+
     refresh();
     onClose();
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 

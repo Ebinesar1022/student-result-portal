@@ -1,5 +1,5 @@
 export interface Student {
-  id: number;
+  id: string;
   classId: string;
   className: string;
   name: string;

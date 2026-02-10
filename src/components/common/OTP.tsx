@@ -5,7 +5,7 @@ import {
   DialogActions,
   Button,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import emailjs from "@emailjs/browser";
@@ -30,24 +30,51 @@ const OTP = ({ open, email, onSuccess, onClose }: CommonOtpProps) => {
   const [expiry, setExpiry] = useState(0);
 
   const sendOtp = async () => {
-    const otp = generateOtp();
-    setGeneratedOtp(otp);
-    setExpiry(Date.now() + 5 * 60 * 1000);
+    if (!email) {
+      alert("Email is missing");
+      onClose();
+      return;
+    }
 
-    await emailjs.send(
-      SERVICE_ID,
-      TEMPLATE_ID,
-      {
-        otp,
-        to_email: email,
-      },
-      PUBLIC_KEY,
-    );
+    try {
+      const otp = generateOtp();
+      setGeneratedOtp(otp);
+      setExpiry(Date.now() + 5 * 60 * 1000);
+
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          otp,
+          to_email: email,
+        },
+        PUBLIC_KEY,
+      );
+
+      console.log("OTP sent successfully");
+    } catch (error: any) {
+      console.error("EmailJS error:", error);
+
+      alert(
+        error?.text ||
+          error?.message ||
+          "Failed to send OTP. Please try again.",
+      );
+
+      onClose(); // 🔑 close dialog safely
+    }
   };
+
   useEffect(() => {
-    if (open) {
+    let mounted = true;
+
+    if (open && mounted) {
       sendOtp();
     }
+
+    return () => {
+      mounted = false;
+    };
   }, [open]);
 
   const verifyOtp = () => {

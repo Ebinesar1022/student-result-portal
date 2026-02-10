@@ -1,17 +1,25 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
-// import CssBaseline from "@mui/material/CssBaseline";
 import { useEffect, useState } from "react";
-import AdminPage from "./pages/AdminPage";
+
+import { lightTheme, darkTheme } from "./theme";
+
+import WelcomePage from "./pages/WelcomPage";
+import LandingPage from "./pages/LandingPage";
 import StudentPage from "./pages/StudentPage";
 import ClassStudentsPage from "./pages/ClassStudentsPage";
-import LandingPage from "./pages/LandingPage";
 import ClassMarksPage from "./pages/ClassMarksPage";
-import { lightTheme, darkTheme } from "./theme";
-import WelcomePage from "./pages/WelcomPage";
-import CommonSnackbar from "./components/common/CommonSnackbar";
+
+import AdminPage from "./pages/AdminPage";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ClassManager from "./components/admin/ClassManager";
+import TeacherPage from "./pages/admin/TeacherPage";
+import AuditPage from "./pages/admin/AuditPage";
+
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import EnterMarksPage from "./pages/teacher/EnterMarksPage";
+
+import CommonSnackbar from "./components/common/CommonSnackbar";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -32,8 +40,6 @@ const App = () => {
 
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      {/* <CssBaseline /> */}
-
       <BrowserRouter>
         <CommonSnackbar
           open={snackbar.open}
@@ -41,9 +47,13 @@ const App = () => {
           severity={snackbar.severity}
           onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
         />
+
         <Routes>
+          {/* PUBLIC */}
           <Route path="/" element={<WelcomePage />} />
           <Route path="/login" element={<LandingPage />} />
+
+          {/* ADMIN (nested) */}
           <Route
             path="/admin"
             element={
@@ -53,6 +63,61 @@ const App = () => {
                 setSnackbar={setSnackbar}
               />
             }
+          >
+            <Route
+              index
+              element={
+                <AdminDashboard darkMode={darkMode} setDarkMode={setDarkMode} />
+              }
+            />
+            <Route
+              path="teachers"
+              element={
+                <TeacherPage darkMode={darkMode} setDarkMode={setDarkMode} />
+              }
+            />
+            <Route
+              path="classes"
+              element={<ClassManager setSnackbar={setSnackbar} />}
+            />
+            <Route
+              path="/admin/audit"
+              element={
+                <AuditPage/>
+              }
+            />
+          </Route>
+
+          {/* TEACHER */}
+          <Route
+            path="/teacher/dashboard"
+            element={
+              <TeacherDashboard darkMode={darkMode} setDarkMode={setDarkMode} />
+            }
+          />
+          <Route
+            path="/teacher/marks/:classId/:subject"
+            element={
+              <EnterMarksPage darkMode={darkMode} setDarkMode={setDarkMode} />
+            }
+          />
+
+          {/* STUDENT */}
+          <Route
+            path="/student/:rollNo"
+            element={
+              <StudentPage
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+                setSnackbar={setSnackbar}
+              />
+            }
+          />
+
+          {/* CLASS */}
+          <Route
+            path="/class/:id/students"
+            element={<ClassStudentsPage setSnackbar={setSnackbar} />}
           />
           <Route
             path="/class/:id/marks"
@@ -64,29 +129,10 @@ const App = () => {
               />
             }
           />
-          <Route path="/teacher/dashboard" element={<TeacherDashboard darkMode={darkMode} setDarkMode={setDarkMode} />} />
-          <Route
-            path="/teacher/marks/:classId/:subject"
-             element={<EnterMarksPage darkMode={darkMode} setDarkMode={setDarkMode} />}
-          />
-
-          <Route
-            path="/class/:id/students"
-            element={<ClassStudentsPage setSnackbar={setSnackbar} />}
-          />
-          <Route
-            path="/student/:rollNo"
-            element={
-              <StudentPage
-                darkMode={darkMode}
-                setDarkMode={setDarkMode}
-                setSnackbar={setSnackbar}
-              />
-            }
-          />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
   );
 };
+
 export default App;

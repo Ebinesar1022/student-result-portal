@@ -23,7 +23,7 @@ export default function AssignClassSubjectDialog({ teacher, onClose }: Props) {
   const [subject, setSubject] = useState<string>("");
 
   useEffect(() => {
-    CrudService.get("/classes").then(setClasses);
+    CrudService.get<ClassModel[]>("/classes").then(setClasses);
   }, []);
 
   const handleAssign = async () => {

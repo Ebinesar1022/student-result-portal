@@ -13,6 +13,8 @@ import { useEffect, useState } from "react";
 import { CrudService } from "../../api/CrudService";
 import "../../styles/StudentDialog.css";
 import OTP from "../common/OTP";
+import { getCurrentUser } from "../../utils/currentUser";
+import { auditLog } from "../../utils/auditlog";
 
 interface Props {
   open: boolean;
@@ -73,28 +75,54 @@ const AddClassDialog = ({ open, onClose, refresh, setSnackbar }: Props) => {
       alert("Add at least one subject");
       return;
     }
+
     if (!/^[A-Z]{3}\d{2}$/.test(classCode)) {
       alert("Class Code must be like STU07");
       return;
     }
+
     if (!examName) {
       alert("Please select exam name");
       return;
     }
 
-    await CrudService.addClass({
+    // 🔑 CURRENT USER (ADMIN)
+    const user = getCurrentUser();
+
+    // 🔑 CREATE CLASS OBJECT
+    const newClass = {
+      id: crypto.randomUUID(),
       className: className.trim(),
       classCode,
       subjects,
       examName,
+    };
+
+    // ✅ SAVE CLASS
+    await CrudService.addClass(newClass);
+
+    // 🧾 AUDIT → CLASS CREATE
+    await auditLog({
+      actorType: "ADMIN",
+      actorId: user.id,
+      actorName: user.name,
+      actorCode: user.code,
+
+      action: "CREATE",
+      entityType: "CLASS",
+      entityId: newClass.id,
+
+      description: `Created class ${newClass.className} (${newClass.classCode}) with subjects: ${subjects.join(", ")} for ${examName}`,
     });
 
     refresh();
+
     setSnackbar({
       open: true,
       message: "Class added successfully",
       severity: "success",
     });
+
     onClose();
   };
 

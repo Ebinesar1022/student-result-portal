@@ -14,7 +14,6 @@ import {
   TablePagination,
 } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { AuditService } from "../services/AuditService";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { useEffect, useState } from "react";
@@ -24,7 +23,8 @@ import Navbar from "../components/common/Navbar";
 import { ClassModel } from "../models/Class";
 import { Student } from "../models/Student";
 import "../styles/landing.css";
-import { get } from "http";
+import { getCurrentUser } from "../utils/currentUser";
+import { auditLog } from "../utils/auditlog";
 
 interface Props {
   darkMode: boolean;
@@ -42,13 +42,35 @@ const PASS_MARK = 35;
 
 type FilterType = "ALL" | "PASS" | "FAIL" | "ABOVE_50" | "ABOVE_90" | "CENTUM";
 
-const getOverallStatus = (subjects: any[]) =>
-  subjects.every((s) => s.marks >= PASS_MARK) ? "PASS" : "FAIL";
+/* ---------------- HELPERS ---------------- */
 
-const getOverallGrade = (subjects: any[]) => {
-  if (subjects.some((s) => s.marks < PASS_MARK)) return "FAIL";
+const getStudentMarks = (
+  marks: any[],
+  studentId: string,
+  classId: string
+) => {
+  const result: Record<string, number> = {};
 
-  const avg = subjects.reduce((sum, s) => sum + s.marks, 0) / subjects.length;
+  marks
+    .filter(
+      (m) => m.studentId === studentId && m.classId === classId
+    )
+    .forEach((m) => {
+      result[m.subject] = m.marks;
+    });
+
+  return result;
+};
+
+const getOverallStatus = (marks: Record<string, number>) =>
+  Object.values(marks).every((m) => m >= PASS_MARK) ? "PASS" : "FAIL";
+
+const getOverallGrade = (marks: Record<string, number>) => {
+  const values = Object.values(marks);
+
+  if (values.some((m) => m < PASS_MARK)) return "FAIL";
+
+  const avg = values.reduce((a, b) => a + b, 0) / values.length;
 
   if (avg >= 90) return "A";
   if (avg >= 75) return "B";
@@ -56,8 +78,7 @@ const getOverallGrade = (subjects: any[]) => {
   return "D";
 };
 
-const getMark = (subjects: any[], subject: string) =>
-  subjects.find((s) => s.name === subject)?.marks ?? "-";
+/* ---------------- COMPONENT ---------------- */
 
 const ClassMarksPage: React.FC<Props> = ({
   darkMode,
@@ -66,11 +87,17 @@ const ClassMarksPage: React.FC<Props> = ({
 }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
   const [students, setStudents] = useState<Student[]>([]);
+  const [marks, setMarks] = useState<any[]>([]);
   const [cls, setCls] = useState<ClassModel | null>(null);
   const [filter, setFilter] = useState<FilterType>("ALL");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const currentUser = getCurrentUser();
+
+
+  /* ---------------- LOAD DATA ---------------- */
 
   useEffect(() => {
     if (!id) return;
@@ -82,21 +109,31 @@ const ClassMarksPage: React.FC<Props> = ({
 
       const studs = await CrudService.getStudentsByClass(id);
       setStudents(studs);
+
+      const marksRes = await CrudService.get<any[]>("/marks");
+      setMarks(marksRes);
     };
 
     load();
   }, [id]);
+
   useEffect(() => {
     setPage(0);
   }, [filter]);
 
   if (!cls) return null;
 
+  /* ---------------- FILTER STUDENTS ---------------- */
+
   const filteredStudents = students.filter((student) => {
-    const status = getOverallStatus(student.subjects);
+    const studentMarks = getStudentMarks(marks, student.id, cls.id);
+
+    if (Object.keys(studentMarks).length === 0) return false;
+
+    const status = getOverallStatus(studentMarks);
     const avg =
-      student.subjects.reduce((a: number, b: any) => a + b.marks, 0) /
-      student.subjects.length;
+      Object.values(studentMarks).reduce((a, b) => a + b, 0) /
+      Object.values(studentMarks).length;
 
     switch (filter) {
       case "PASS":
@@ -108,65 +145,108 @@ const ClassMarksPage: React.FC<Props> = ({
       case "ABOVE_90":
         return avg >= 90;
       case "CENTUM":
-        return student.subjects.some((s: any) => s.marks === 100);
+        return Object.values(studentMarks).some((m) => m === 100);
       default:
         return true;
     }
   });
+
   const paginatedStudents = filteredStudents.slice(
     page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage,
+    page * rowsPerPage + rowsPerPage
   );
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  /* ---------------- PAGINATION ---------------- */
+
+  const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const handleDownloadExcel =  async () => {
-    const data = filteredStudents.map((s) => {
-      const row: any = {
-        Name: s.name,
-        "Roll No": s.rollNo,
-      };
-      cls.subjects.forEach((sub) => {
-        row[sub] = getMark(s.subjects, sub);
-      });
-      row.Status = getOverallStatus(s.subjects);
-      row.Grade = getOverallGrade(s.subjects);
-      return row;
+  /* ---------------- EXCEL DOWNLOAD ---------------- */
+
+  const handleDownloadExcel = async () => {
+  const data = filteredStudents.map((s) => {
+    const studentMarks = getStudentMarks(marks, s.id, cls.id);
+
+    const row: any = {
+      Name: s.name,
+      "Roll No": s.rollNo,
+    };
+
+    cls.subjects.forEach((sub) => {
+      row[sub] = studentMarks[sub] ?? "-";
     });
 
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Marks");
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-    const file = new Blob([excelBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-    saveAs(file, `${cls.className}_${filter}_marks.xlsx`);
-    await AuditService.log(
-      "DOWNLOAD",
-      "CLASS_MARKS",
-      cls.id,
-      `Downloaded Excel (${filter})`,
-    );
+    row.Status = getOverallStatus(studentMarks);
+    row.Grade = getOverallGrade(studentMarks);
 
-    setSnackbar({
-      open: true,
-      message: "Excel file downloaded successfully",
-      severity: "success",
+    return row;
+  });
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Marks");
+
+  const excelBuffer = XLSX.write(workbook, {
+    bookType: "xlsx",
+    type: "array",
+  });
+
+  const file = new Blob([excelBuffer], {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  });
+
+  saveAs(file, `${cls.className}_${filter}_marks.xlsx`);
+
+  /* ================= AUDIT LOG ================= */
+
+  if (currentUser) {
+    await auditLog({
+      actorType: currentUser.actorType,
+      actorId: currentUser.id,
+      actorName: currentUser.name,
+      actorCode: currentUser.code,
+
+      action: "DOWNLOAD",
+      entityType: "CLASS_MARKS",
+      entityId: cls.id,
+
+      description: `Downloaded ${cls.className} marks (${filter})`,
+
+      changes: [
+        {
+          field: "filter",
+          oldValue: null,
+          newValue: filter,
+        },
+        {
+          field: "studentCount",
+          oldValue: null,
+          newValue: filteredStudents.length,
+        },
+      ],
     });
-  };
+  }
+
+  /* ============================================= */
+
+  setSnackbar({
+    open: true,
+    message: "Excel file downloaded successfully",
+    severity: "success",
+  });
+};
+
+
+  /* ---------------- UI ---------------- */
+
   return (
     <>
       <Navbar
@@ -174,6 +254,7 @@ const ClassMarksPage: React.FC<Props> = ({
         darkMode={darkMode}
         setDarkMode={setDarkMode}
       />
+
       <Box className="landing-wrap">
         <Box p={3}>
           <Button variant="contained" onClick={() => navigate(-1)}>
@@ -189,14 +270,16 @@ const ClassMarksPage: React.FC<Props> = ({
             >
               Download Excel
             </Button>
+
             <Select
               value={filter}
               onChange={(e) => setFilter(e.target.value as FilterType)}
-              startAdornment={<FilterListIcon sx={{ mr: 1, color: "#fff" }} />}
+              startAdornment={
+                <FilterListIcon sx={{ mr: 1, color: "#fff" }} />
+              }
               sx={{
                 color: "#fff",
                 minWidth: 220,
-
                 "& .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#fff",
                 },
@@ -206,7 +289,6 @@ const ClassMarksPage: React.FC<Props> = ({
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#fff",
                 },
-
                 "& .MuiSvgIcon-root": {
                   color: "#fff",
                 },
@@ -225,12 +307,8 @@ const ClassMarksPage: React.FC<Props> = ({
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>
-                    <b>Name</b>
-                  </TableCell>
-                  <TableCell>
-                    <b>Roll No</b>
-                  </TableCell>
+                  <TableCell><b>Name</b></TableCell>
+                  <TableCell><b>Roll No</b></TableCell>
 
                   {cls.subjects.map((sub) => (
                     <TableCell key={sub} align="center">
@@ -238,19 +316,21 @@ const ClassMarksPage: React.FC<Props> = ({
                     </TableCell>
                   ))}
 
-                  <TableCell align="center">
-                    <b>Status</b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>Grade</b>
-                  </TableCell>
+                  <TableCell align="center"><b>Status</b></TableCell>
+                  <TableCell align="center"><b>Grade</b></TableCell>
                 </TableRow>
               </TableHead>
 
               <TableBody>
                 {paginatedStudents.map((s) => {
-                  const status = getOverallStatus(s.subjects);
-                  const grade = getOverallGrade(s.subjects);
+                  const studentMarks = getStudentMarks(
+                    marks,
+                    s.id,
+                    cls.id
+                  );
+
+                  const status = getOverallStatus(studentMarks);
+                  const grade = getOverallGrade(studentMarks);
 
                   return (
                     <TableRow key={s.id}>
@@ -259,14 +339,15 @@ const ClassMarksPage: React.FC<Props> = ({
 
                       {cls.subjects.map((sub) => (
                         <TableCell key={sub} align="center">
-                          {getMark(s.subjects, sub)}
+                          {studentMarks[sub] ?? "-"}
                         </TableCell>
                       ))}
 
                       <TableCell
                         align="center"
                         sx={{
-                          color: status === "PASS" ? "green" : "red",
+                          color:
+                            status === "PASS" ? "green" : "red",
                           fontWeight: 700,
                         }}
                       >
@@ -274,13 +355,16 @@ const ClassMarksPage: React.FC<Props> = ({
                       </TableCell>
 
                       <TableCell align="center">
-                        <Typography fontWeight={700}>{grade}</Typography>
+                        <Typography fontWeight={700}>
+                          {grade}
+                        </Typography>
                       </TableCell>
                     </TableRow>
                   );
                 })}
               </TableBody>
             </Table>
+
             <TablePagination
               component="div"
               count={filteredStudents.length}

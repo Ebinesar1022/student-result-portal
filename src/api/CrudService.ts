@@ -4,27 +4,27 @@ import { Student } from "../models/Student";
 import { User } from "../models/User";
 import { Teacher } from "../models/Teacher";
 
-const API = "http://localhost:3000";
+const API = "http://localhost:3000"; // ✅ ensure this matches json-server
 
 export const CrudService = {
   /* ---------------- GENERIC METHODS ---------------- */
 
-  get: async (url: string) => {
+  get: async <T>(url: string): Promise<T> => {
     const res = await axios.get(`${API}${url}`);
     return res.data;
   },
 
-  post: async (url: string, data: any) => {
+  post: async <T>(url: string, data: any): Promise<T> => {
     const res = await axios.post(`${API}${url}`, data);
     return res.data;
   },
 
-  put: async (url: string, data: any) => {
+  put: async <T>(url: string, data: any): Promise<T> => {
     const res = await axios.put(`${API}${url}`, data);
     return res.data;
   },
 
-  delete: async (url: string) => {
+  delete: async <T>(url: string): Promise<T> => {
     const res = await axios.delete(`${API}${url}`);
     return res.data;
   },

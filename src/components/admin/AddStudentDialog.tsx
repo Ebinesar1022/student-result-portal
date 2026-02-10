@@ -61,7 +61,7 @@ const AddStudentDialog = ({
       return;
     }
     const rollNo = `${classCode}${studentNumber.padStart(3, "0")}`;
-    await CrudService.addStudent({
+    await CrudService.post("/students", {
       ...student,
       classId,
       rollNo,

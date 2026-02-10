@@ -16,7 +16,7 @@ const CommonSnackbar: React.FC<CommonSnackbarProps> = ({
   return (
     <Snackbar
       open={open}
-      autoHideDuration={6000}
+      autoHideDuration={1000}
       onClose={onClose}
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
     >

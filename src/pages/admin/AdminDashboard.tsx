@@ -1,6 +1,5 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../../components/common/Navbar";
 interface Props {
   darkMode: boolean;
   setDarkMode: (value: boolean) => void;
@@ -11,8 +10,6 @@ const AdminDashboard = ({ darkMode, setDarkMode }: Props) => {
 
   return (
     <>
-      <Navbar title="Admin Dashboard"  darkMode={darkMode}
-        setDarkMode={setDarkMode} />
       <Box p={4}>
         <Typography variant="h5" mb={3}>
           Admin Controls

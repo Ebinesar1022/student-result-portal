@@ -17,6 +17,8 @@ import InfoIcon from "@mui/icons-material/Info";
 import PageLoader from "../common/PageLoader";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { auditLog } from "../../utils/auditlog";
+import { getCurrentUser } from "../../utils/currentUser";
 
 interface Props {
   rollNo: string;
@@ -30,91 +32,150 @@ interface Props {
 }
 
 const PASS_MARK = 35;
-// const getPercentage = (subjects: { marks: number }[]) => {
-//   const total = subjects.reduce((sum, s) => sum + s.marks, 0);
-//   return Math.round(total / subjects.length);
-// };
 
 const StudentDashboard: React.FC<Props> = ({ rollNo, setSnackbar }) => {
   const [student, setStudent] = useState<Student | null>(null);
-  const [openDetails, setOpenDetails] = useState(false);
+  const [marks, setMarks] = useState<any[]>([]);
   const [classes, setClasses] = useState<any[]>([]);
+  const [openDetails, setOpenDetails] = useState(false);
 
   useEffect(() => {
+    if (!rollNo) return;
+
     const load = async () => {
-      const res = await CrudService.getStudentByRoll(rollNo);
+      // 1️⃣ Get student
+      const stuRes = await CrudService.get<Student[]>(
+        `/students?rollNo=${rollNo}`,
+      );
+
+      if (!stuRes.length) return;
+
+      const stu = stuRes[0];
+
+      // 2️⃣ Get marks from marks table
+      const marksRes = await CrudService.get<any[]>(
+        `/marks?studentId=${stu.id}`,
+      );
+
+      // 3️⃣ Get classes
       const cls = await CrudService.getClasses();
-      setStudent(res);
+
+      setStudent(stu);
+      setMarks(marksRes);
       setClasses(cls);
+
       setSnackbar({
         open: true,
         message: "Student logged in successfully",
         severity: "success",
       });
     };
+
     load();
   }, [rollNo]);
 
   if (!student) return <PageLoader />;
 
-  const isPass = student.subjects?.every((s) => s.marks >= PASS_MARK) ?? false;
+  // 🔥 Merge subjects with marks table
+  const subjectMarks = student.subjects.map((sub) => {
+    const mark = marks.find((m) => m.subject === sub.name);
+    return {
+      name: sub.name,
+      marks: mark ? mark.marks : 0,
+    };
+  });
 
-  const className =
-    classes.find((c) => c.id === student.classId)?.className || "N/A";
-    const cls = classes.find((c) => c.id === student.classId);
+  const isPass = subjectMarks.every((s) => s.marks >= PASS_MARK);
+
+  const classObj = classes.find((c) => c.id === student.classId);
+  const className = classObj?.className || "N/A";
+  const examName = classObj?.examName || "N/A";
+  const currentUser = getCurrentUser();
 
 
-  const getStatus = (marks: number) => (marks >= PASS_MARK ? "PASS" : "FAIL");
+  const getStatus = (m: number) => (m >= PASS_MARK ? "PASS" : "FAIL");
 
-  const getGrade = (marks: number) => {
-    if (marks < PASS_MARK) return "FAIL";
-    if (marks >= 90) return "A";
-    if (marks >= 75) return "B";
-    if (marks >= 60) return "C";
+  const getGrade = (m: number) => {
+    if (m < PASS_MARK) return "FAIL";
+    if (m >= 90) return "A";
+    if (m >= 75) return "B";
+    if (m >= 60) return "C";
     return "D";
   };
 
-  const downloadMarksheet = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(20);
-    doc.setFont("helvetica", "bold");
-    doc.text("New School", 105, 18, { align: "center" });
+  const downloadMarksheet = async () => {
+  const doc = new jsPDF();
 
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "bold");
-    doc.text("MARKSHEET", 105, 28, { align: "center" });
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "bold");
-    doc.text(`Exam Name: ${cls?.examName || "N/A"}`, 105, 38, { align: "center" });
+  doc.setFontSize(20);
+  doc.text("New School", 105, 18, { align: "center" });
 
-    doc.setLineWidth(0.5);
-    doc.line(20, 32, 190, 32);
+  doc.setFontSize(16);
+  doc.text("MARKSHEET", 105, 28, { align: "center" });
+  doc.text(`Exam: ${examName}`, 105, 38, { align: "center" });
 
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
+  doc.line(20, 42, 190, 42);
 
-    doc.text(`Name: ${student.name}`, 20, 42);
-    doc.text(`Roll No: ${student.rollNo}`, 20, 50);
-    doc.text(`Class: ${className}`, 20, 58);
+  doc.setFontSize(12);
+  doc.text(`Name: ${student.name}`, 20, 50);
+  doc.text(`Roll No: ${student.rollNo}`, 20, 58);
+  doc.text(`Class: ${className}`, 20, 66);
 
-    const tableData = student.subjects.map((s, i) => [
-      i + 1,
-      s.name,
-      s.marks,
-      getStatus(s.marks),
-      getGrade(s.marks),
-    ]);
+  const tableData = subjectMarks.map((s, i) => [
+    i + 1,
+    s.name,
+    s.marks,
+    getStatus(s.marks),
+    getGrade(s.marks),
+  ]);
 
-    autoTable(doc, {
-      startY: 65,
-      head: [["S.No", "Subject", "Marks", "Status", "Grade"]],
-      body: tableData,
-      styles: { halign: "center" },
-      headStyles: { fillColor: [25, 118, 210] },
+  autoTable(doc, {
+    startY: 75,
+    head: [["S.No", "Subject", "Marks", "Status", "Grade"]],
+    body: tableData,
+    styles: { halign: "center" },
+    headStyles: { fillColor: [25, 118, 210] },
+  });
+
+  doc.save(`${student.rollNo}_Marksheet.pdf`);
+
+  /* ================= AUDIT LOG ================= */
+
+  if (currentUser) {
+    await auditLog({
+      actorType: "STUDENT",
+      actorId: student.id,
+      actorName: student.name,
+      actorCode: student.rollNo,
+
+      action: "DOWNLOAD",
+      entityType: "MARKSHEET",
+      entityId: student.id,
+
+      description: `Downloaded marksheet for ${examName}`,
+
+      changes: [
+        {
+          field: "subjects",
+          oldValue: null,
+          newValue: subjectMarks.length,
+        },
+        {
+          field: "result",
+          oldValue: null,
+          newValue: isPass ? "PASS" : "FAIL",
+        },
+      ],
     });
+  }
 
-    doc.save(`${student.rollNo}_Marksheet.pdf`);
-  };
+  /* ============================================= */
+
+  setSnackbar({
+    open: true,
+    message: "Marksheet downloaded successfully",
+    severity: "success",
+  });
+};
 
   return (
     <Box className="landing-stu">
@@ -132,6 +193,7 @@ const StudentDashboard: React.FC<Props> = ({ rollNo, setSnackbar }) => {
               }}
             >
               <Box textAlign="center" mb={2}>
+                {" "}
                 <img
                   src={student.photo || "/images/default-avatar.png"}
                   alt="Student"
@@ -142,43 +204,41 @@ const StudentDashboard: React.FC<Props> = ({ rollNo, setSnackbar }) => {
                     objectFit: "cover",
                     border: "4px solid #1976d2",
                   }}
-                />
+                />{" "}
               </Box>
-
               <Typography variant="h4">{student.name}</Typography>
               <Typography variant="h6">Roll No: {student.rollNo}</Typography>
               <Typography variant="h6">Class: {className}</Typography>
 
               <Button
                 variant="outlined"
-                sx={{ mt: 2 }}
                 onClick={() => setOpenDetails(true)}
                 startIcon={<InfoIcon />}
               >
                 DETAILS
               </Button>
             </Box>
-            <Typography variant="h6" sx={{ mb: 1 }}>
-              Exam: <strong>{cls.examName}</strong>
+
+            <Typography mt={1}>
+              Exam: <strong>{examName}</strong>
             </Typography>
 
             <Typography
               mt={2}
-              color={isPass ? "green" : "red"}
               fontWeight="bold"
+              color={isPass ? "green" : "red"}
             >
               Overall Result: {isPass ? "PASS" : "FAIL"}
             </Typography>
 
-            <Divider sx={{ mb: 4 }} />
+            <Divider sx={{ my: 3 }} />
 
             <Grid container justifyContent="center">
               <Box display="flex" gap={2} flexWrap="wrap">
-                {student.subjects.map((sub) => {
+                {subjectMarks.map((sub) => {
                   const pass = sub.marks >= PASS_MARK;
                   return (
                     <Paper
-                      elevation={4}
                       key={sub.name}
                       sx={{ p: 2, width: 150, textAlign: "center" }}
                     >
@@ -187,7 +247,6 @@ const StudentDashboard: React.FC<Props> = ({ rollNo, setSnackbar }) => {
                         variant="determinate"
                         value={sub.marks}
                         size={60}
-                        thickness={4}
                       />
                       <Typography>{sub.marks}%</Typography>
                       <Typography color={pass ? "green" : "red"}>
@@ -200,11 +259,7 @@ const StudentDashboard: React.FC<Props> = ({ rollNo, setSnackbar }) => {
             </Grid>
 
             <Box display="flex" justifyContent="flex-end" mt={4}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={downloadMarksheet}
-              >
+              <Button variant="contained" onClick={downloadMarksheet}>
                 Download Marksheet (PDF)
               </Button>
             </Box>

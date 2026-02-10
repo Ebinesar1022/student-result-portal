@@ -25,32 +25,57 @@ const WelcomePage = () => {
     setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
     loadToppers();
   }, []);
+const loadToppers = async () => {
+  const classes = await CrudService.getClasses();
+  const allCards: any[] = [];
 
-  const loadToppers = async () => {
-    const classes = await CrudService.getClasses();
-    const allCards = [];
+  for (const cls of classes) {
+    const students = await CrudService.getStudentsByClass(cls.id);
 
-    for (const cls of classes) {
-      const students = await CrudService.getStudentsByClass(cls.id);
+    if (!students.length) continue;
 
-      if (!students.length) continue;
+    // 🔥 FETCH MARKS HERE
+    const marks = await CrudService.get<any[]>(
+      `/marks?classId=${cls.id}`
+    );
 
-      const ranked = students
-        .map((s: any) => ({
+    const ranked = students
+      .map((s: any) => {
+        const studentMarks = marks.filter(
+          (m) => m.studentId === s.id
+        );
+
+        if (!studentMarks.length) return null;
+
+        const total = studentMarks.reduce(
+          (sum, m) => sum + Number(m.marks),
+          0
+        );
+
+        const percentage = Math.round(
+          total / studentMarks.length
+        );
+
+        return {
           ...s,
-          percentage: getPercentage(s.subjects),
-        }))
-        .sort((a, b) => b.percentage - a.percentage)
-        .slice(0, 3);
+          percentage,
+        };
+      })
+      .filter(Boolean) // remove nulls
+      .sort((a, b) => b.percentage - a.percentage)
+      .slice(0, 3);
 
+    if (ranked.length) {
       allCards.push({
         className: cls.className,
         toppers: ranked,
       });
     }
+  }
 
-    setToppersByClass(allCards);
-  };
+  setToppersByClass(allCards);
+};
+
 
   return (
     <Box

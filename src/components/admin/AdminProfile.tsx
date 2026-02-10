@@ -61,32 +61,30 @@ const AdminProfile: React.FC<Props> = ({ onClose }) => {
       {!editing ? (
         <Button
           sx={{ mt: 2 }}
-          onClick={() => setEditOtpOpen(true)}
+          onClick={() => {
+            if (!adminEmail) {
+              setEditing(true); // allow direct add
+            } else {
+              setEditOtpOpen(true); // OTP only for existing email
+            }
+          }}
         >
           {adminEmail ? "Edit Email" : "Add Email"}
         </Button>
       ) : (
-        <Button
-          variant="contained"
-          sx={{ mt: 2 }}
-          onClick={handleSaveClick}
-        >
+        <Button variant="contained" sx={{ mt: 2 }} onClick={handleSaveClick}>
           Save & Verify
         </Button>
       )}
 
-      <Button
-        variant="outlined"
-        sx={{ mt: 2 }}
-        onClick={onClose}
-      >
+      <Button variant="outlined" sx={{ mt: 2 }} onClick={onClose}>
         Close
       </Button>
 
       {/* OTP → BEFORE EDIT */}
       <OTP
         open={editOtpOpen}
-        email={adminEmail}   // verify existing email
+        email={adminEmail} // verify existing email
         onClose={() => setEditOtpOpen(false)}
         onSuccess={() => {
           setEditOtpOpen(false);

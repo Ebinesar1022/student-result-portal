@@ -5,11 +5,13 @@ import {
   TextField,
   Button,
   Chip,
-  Stack
+  Stack,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ClassModel } from "../../models/Class";
 import { CrudService } from "../../api/CrudService";
+import { auditLog } from "../../utils/auditlog";
+import { getCurrentUser } from "../../utils/currentUser";
 
 interface Props {
   open: boolean;
@@ -30,7 +32,7 @@ const EditClassDialog = ({
   onClose,
   selectedClass,
   refresh,
-  setSnackbar
+  setSnackbar,
 }: Props) => {
   const [className, setClassName] = useState("");
   const [subjectInput, setSubjectInput] = useState("");
@@ -43,10 +45,10 @@ const EditClassDialog = ({
     }
   }, [selectedClass]);
 
-  // 🔁 Merge class subjects with student subjects
+  // 🔁 merge subjects with student subjects
   const mergeSubjects = (
     classSubjects: string[],
-    studentSubjects: { name: string; marks: number }[]
+    studentSubjects: { name: string; marks: number }[],
   ) => {
     return classSubjects.map((sub) => {
       const existing = studentSubjects.find((s) => s.name === sub);
@@ -57,28 +59,119 @@ const EditClassDialog = ({
   const updateClass = async () => {
     if (!selectedClass) return;
 
-  
+    const user = getCurrentUser();
+
+    // 🔒 OLD STATE
+    const oldClassName = selectedClass.className;
+    const oldSubjects = [...selectedClass.subjects];
+
+    // 🔓 NEW STATE
+    const newClassName = className.trim();
+    const newSubjects = subjects;
+
+    // 🧾 UPDATE CLASS
     await CrudService.updateClass(selectedClass.id, {
       ...selectedClass,
-      className,
-      subjects
+      className: newClassName,
+      subjects: newSubjects,
     });
 
-  
+    // ✏️ AUDIT: CLASS NAME UPDATE
+    if (oldClassName !== newClassName) {
+      await auditLog({
+        actorType: "ADMIN",
+        actorId: user.id,
+        actorName: user.name,
+        actorCode: user.code,
+
+        action: "UPDATE",
+        entityType: "CLASS",
+        entityId: selectedClass.id,
+
+        description: `Updated class name from ${oldClassName} to ${newClassName}`,
+
+        changes: [
+          {
+            field: "className",
+            oldValue: oldClassName,
+            newValue: newClassName,
+          },
+        ],
+      });
+    }
+
+    // ➕ AUDIT: SUBJECTS ADDED
+    const addedSubjects = newSubjects.filter((s) => !oldSubjects.includes(s));
+
+    if (addedSubjects.length > 0) {
+      await auditLog({
+        actorType: "ADMIN",
+        actorId: user.id,
+        actorName: user.name,
+        actorCode: user.code,
+
+        action: "UPDATE",
+        entityType: "CLASS",
+        entityId: selectedClass.id,
+
+        description: `Added subject(s): ${addedSubjects.join(", ")}`,
+
+        changes: [
+          {
+            field: "subjects",
+            oldValue: oldSubjects,
+            newValue: newSubjects,
+          },
+        ],
+      });
+    }
+
+    // ❌ AUDIT: SUBJECTS REMOVED
+    const removedSubjects = oldSubjects.filter((s) => !newSubjects.includes(s));
+
+    if (removedSubjects.length > 0) {
+      await auditLog({
+        actorType: "ADMIN",
+        actorId: user.id,
+        actorName: user.name,
+        actorCode: user.code,
+
+        action: "UPDATE",
+        entityType: "CLASS",
+        entityId: selectedClass.id,
+
+        description: `Removed subject(s): ${removedSubjects.join(", ")}`,
+
+        changes: [
+          {
+            field: "subjects",
+            oldValue: oldSubjects,
+            newValue: newSubjects,
+          },
+        ],
+      });
+    }
+
+    // 🔁 UPDATE STUDENT SUBJECT STRUCTURE
     const students = await CrudService.getStudentsByClass(selectedClass.id);
 
-  
     await Promise.all(
       students.map((student: any) =>
-        CrudService.updateStudent(student.id, {
+        CrudService.put(`/students/${student.id}`, {
           ...student,
-          subjects: mergeSubjects(subjects, student.subjects || [])
-        })
-      )
+          subjects: mergeSubjects(newSubjects, student.subjects || []),
+        }),
+      ),
     );
 
     refresh();
     onClose();
+
+    setSnackbar({
+      open: true,
+      message: "Class updated successfully",
+      severity: "success",
+    });
   };
 
   return (
@@ -94,7 +187,7 @@ const EditClassDialog = ({
           margin="normal"
         />
 
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} mt={2}>
           <TextField
             label="Add Subject"
             value={subjectInput}
@@ -113,13 +206,11 @@ const EditClassDialog = ({
         </Stack>
 
         <Stack direction="row" spacing={1} mt={2} flexWrap="wrap">
-          {subjects.map((s, index) => (
+          {subjects.map((s) => (
             <Chip
-              key={index}
+              key={s}
               label={s}
-              onDelete={() =>
-                setSubjects(subjects.filter((sub) => sub !== s))
-              }
+              onDelete={() => setSubjects(subjects.filter((sub) => sub !== s))}
             />
           ))}
         </Stack>
@@ -127,14 +218,7 @@ const EditClassDialog = ({
         <Button
           variant="contained"
           sx={{ mt: 3 }}
-          onClick={async () => {
-            await updateClass();
-            setSnackbar({
-              open: true,
-              message: "Class updated successfully",
-              severity: "success",
-            });
-          }}
+          onClick={updateClass}
           disabled={!className.trim() || subjects.length === 0}
         >
           Update

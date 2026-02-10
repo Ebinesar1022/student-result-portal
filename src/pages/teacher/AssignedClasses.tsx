@@ -14,24 +14,50 @@ interface Props {
   teacher: Teacher;
 }
 
-export default function AssignedClasses({ teacher }: Props) {
-  const [assignments, setAssignments] = useState<any[]>([]);
+interface Assignment {
+  id: string;
+  classId: string;
+  subject: string;
+}
+
+interface Class {
+  id: string;
+  className: string;
+}
+
+const AssignedClasses = ({ teacher }: Props) => {
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [classMap, setClassMap] = useState<Record<string, string>>({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    CrudService.get(`/teacherAssignments?teacherId=${teacher.id}`).then(
-      setAssignments
-    );
+    const load = async () => {
+      const ass = await CrudService.get<Assignment[]>(
+        `/teacherAssignments?teacherId=${teacher.id}`
+      );
+
+      const classes = await CrudService.get<Class[]>(`/classes`);
+
+      const map: Record<string, string> = {};
+      classes.forEach((c) => {
+        map[c.id] = c.className;
+      });
+
+      setAssignments(ass);
+      setClassMap(map);
+    };
+
+    load();
   }, [teacher.id]);
 
   return (
     <Grid container spacing={2}>
       {assignments.map((a) => (
-        <Grid size={{ xs: 12, md: 4 }}key={a.id}>
+        <Grid  size={{ xs: 12, md: 4 }} key={a.id}>
           <Card>
             <CardContent>
               <Typography fontWeight={700}>
-                Class ID: {a.classId}
+                Class: {classMap[a.classId] ?? a.classId}
               </Typography>
 
               <Typography mb={2}>
@@ -54,4 +80,6 @@ export default function AssignedClasses({ teacher }: Props) {
       ))}
     </Grid>
   );
-}
+};
+
+export default AssignedClasses;
