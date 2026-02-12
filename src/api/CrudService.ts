@@ -4,10 +4,9 @@ import { Student } from "../models/Student";
 import { User } from "../models/User";
 import { Teacher } from "../models/Teacher";
 
-const API = "http://localhost:3000"; // ✅ ensure this matches json-server
+const API = "http://localhost:3000"; 
 
 export const CrudService = {
-  /* ---------------- GENERIC METHODS ---------------- */
 
   get: async <T>(url: string): Promise<T> => {
     const res = await axios.get(`${API}${url}`);
@@ -85,7 +84,6 @@ export const CrudService = {
   deleteClass: async (id: string) =>
     axios.delete(`${API}/classes/${id}`),
 
-  /* ---------------- STUDENT HELPERS ---------------- */
 
   getStudentsByClass: async (classId: string) => {
     const res = await axios.get<Student[]>(

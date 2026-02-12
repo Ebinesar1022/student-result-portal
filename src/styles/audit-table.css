@@ -1,0 +1,85 @@
+/* ===== AUDIT TABLE CONTAINER ===== */
+.audit-table-container {
+  margin-bottom: 32px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== TABLE ===== */
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+}
+
+/* ===== TABLE HEADER ===== */
+.audit-table thead {
+  background: linear-gradient(135deg, #1976d2, #0d47a1);
+}
+
+.audit-table thead th {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ===== TABLE BODY ===== */
+.audit-table tbody td {
+  font-size: 13px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* ===== ROW HOVER ===== */
+.audit-table tbody tr:hover {
+  background-color: rgba(25, 118, 210, 0.05);
+}
+
+/* ===== ACTION COLORS ===== */
+.audit-action-login {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.audit-action-logout {
+  color: #c62828;
+  font-weight: 600;
+}
+
+.audit-action-create {
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.audit-action-update {
+  color: #ed6c02;
+  font-weight: 600;
+}
+
+.audit-action-delete {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.audit-action-download {
+  color: #6a1b9a;
+  font-weight: 600;
+}
+
+/* ===== EMPTY STATE ===== */
+.audit-empty {
+  padding: 20px;
+  text-align: center;
+  color: #777;
+  font-style: italic;
+}
+
+/* ===== SECTION TITLE ===== */
+.audit-section-title {
+  margin-bottom: 12px;
+  font-weight: 700;
+}

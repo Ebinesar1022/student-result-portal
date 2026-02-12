@@ -13,9 +13,9 @@ import DownloadAuditTable from "../../components/audit/DownloadAuditTable";
 const AuditPage = () => {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [filters, setFilters] = useState<any>({});
-  const [activeRole, setActiveRole] = useState<
-    "ADMIN" | "TEACHER" | "STUDENT"
-  >("ADMIN");
+  const [activeRole, setActiveRole] = useState<"ADMIN" | "TEACHER" | "STUDENT">(
+    "ADMIN",
+  );
 
   const loadAudit = async () => {
     const data = await AuditService.get(filters);
@@ -27,14 +27,12 @@ const AuditPage = () => {
   }, [filters]);
 
   // ✅ FILTER BY ROLE
-  const roleLogs = logs.filter(
-    (log) => log.actorType === activeRole
-  );
+  const roleLogs = logs.filter((log) => log.actorType === activeRole);
 
   // ✅ GROUP BY ACTION
   const groupedLogs = {
     LOGIN_LOGOUT: roleLogs.filter(
-      (l) => l.action === "LOGIN" || l.action === "LOGOUT"
+      (l) => l.action === "LOGIN" || l.action === "LOGOUT",
     ),
     CREATE: roleLogs.filter((l) => l.action === "CREATE"),
     UPDATE: roleLogs.filter((l) => l.action === "UPDATE"),
@@ -44,14 +42,21 @@ const AuditPage = () => {
 
   return (
     <React.Fragment>
-
-      <Box p={3}>
-        <Typography variant="h5" mb={2}>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          width: "100%",
+          background: "linear-gradient(135deg, #f3f177, #99f2c8)",
+          py: 6,
+        }}
+      >
+         <Box display="flex" justifyContent="center" gap={2} mb={3}>
+        <Typography  variant="h5" mb={2}>
           Audit History
         </Typography>
+        </Box>
 
-        {/* 🔘 ROLE SWITCH */}
-        <Box display="flex" gap={2} mb={3}>
+        <Box display="flex" justifyContent="center" gap={2} mb={3}>
           <Button
             variant={activeRole === "ADMIN" ? "contained" : "outlined"}
             onClick={() => setActiveRole("ADMIN")}
@@ -72,31 +77,53 @@ const AuditPage = () => {
           </Button>
         </Box>
 
-        {/* 🔍 FILTERS */}
-        <Paper sx={{ p: 2, mb: 3 }}>
-          <AuditFilters onChange={setFilters} />
-        </Paper>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mb: 4,
+          }}
+        >
+          <Paper
+            sx={{
+              p: 3,
+              width: "100%",
+              maxWidth: 500,
+              borderRadius: 3,
+              boxShadow: 4,
+            }}
+          >
+            <AuditFilters onChange={setFilters} />
+          </Paper>
+        </Box>
 
-        {/* ================= ADMIN ================= */}
         {activeRole === "ADMIN" && (
           <>
             <Typography variant="h6">🔐 Login / Logout</Typography>
             <LoginAuditTable logs={groupedLogs.LOGIN_LOGOUT} />
 
-            <Typography variant="h6" mt={4}>📝 Creates</Typography>
+            <Typography variant="h6" mt={4}>
+              📝 Creates
+            </Typography>
             <CreateAuditTable
               logs={groupedLogs.CREATE.filter((l) =>
-                ["CLASS", "SUBJECT", "STUDENT"].includes(l.entityType)
+                ["CLASS", "SUBJECT", "STUDENT"].includes(l.entityType),
               )}
             />
 
-            <Typography variant="h6" mt={4}>✏️ Updates</Typography>
+            <Typography variant="h6" mt={4}>
+              ✏️ Updates
+            </Typography>
             <UpdateAuditTable logs={groupedLogs.UPDATE} />
 
-            <Typography variant="h6" mt={4}>❌ Deletes</Typography>
+            <Typography variant="h6" mt={4}>
+              ❌ Deletes
+            </Typography>
             <DeleteAuditTable logs={groupedLogs.DELETE} />
 
-            <Typography variant="h6" mt={4}>⬇️ Downloads</Typography>
+            <Typography variant="h6" mt={4}>
+              ⬇️ Downloads
+            </Typography>
             <DownloadAuditTable logs={groupedLogs.DOWNLOAD} />
           </>
         )}
@@ -107,25 +134,25 @@ const AuditPage = () => {
             <Typography variant="h6">🔐 Login / Logout</Typography>
             <LoginAuditTable logs={groupedLogs.LOGIN_LOGOUT} />
 
-            <Typography variant="h6" mt={4}>📝 Mark Creates</Typography>
+            <Typography variant="h6" mt={4}>
+              📝 Mark Creates
+            </Typography>
             <CreateAuditTable
-              logs={groupedLogs.CREATE.filter(
-                (l) => l.entityType === "MARK"
-              )}
+              logs={groupedLogs.CREATE.filter((l) => l.entityType === "MARK")}
             />
 
-            <Typography variant="h6" mt={4}>✏️ Mark Updates</Typography>
+            <Typography variant="h6" mt={4}>
+              ✏️ Mark Updates
+            </Typography>
             <UpdateAuditTable
-              logs={groupedLogs.UPDATE.filter(
-                (l) => l.entityType === "MARK"
-              )}
+              logs={groupedLogs.UPDATE.filter((l) => l.entityType === "MARK")}
             />
 
-            <Typography variant="h6" mt={4}>❌ Mark Deletes</Typography>
+            <Typography variant="h6" mt={4}>
+              ❌ Mark Deletes
+            </Typography>
             <DeleteAuditTable
-              logs={groupedLogs.DELETE.filter(
-                (l) => l.entityType === "MARK"
-              )}
+              logs={groupedLogs.DELETE.filter((l) => l.entityType === "MARK")}
             />
           </>
         )}
@@ -136,12 +163,14 @@ const AuditPage = () => {
             <Typography variant="h6">🔐 Login / Logout</Typography>
             <LoginAuditTable logs={groupedLogs.LOGIN_LOGOUT} />
 
-            <Typography variant="h6" mt={4}>⬇️ Downloads</Typography>
+            <Typography variant="h6" mt={4}>
+              ⬇️ Downloads
+            </Typography>
             <DownloadAuditTable logs={groupedLogs.DOWNLOAD} />
           </>
         )}
       </Box>
-    </React.Fragment >
+    </React.Fragment>
   );
 };
 

@@ -42,7 +42,6 @@ const PASS_MARK = 35;
 
 type FilterType = "ALL" | "PASS" | "FAIL" | "ABOVE_50" | "ABOVE_90" | "CENTUM";
 
-/* ---------------- HELPERS ---------------- */
 
 const getStudentMarks = (
   marks: any[],
@@ -77,8 +76,6 @@ const getOverallGrade = (marks: Record<string, number>) => {
   if (avg >= 60) return "C";
   return "D";
 };
-
-/* ---------------- COMPONENT ---------------- */
 
 const ClassMarksPage: React.FC<Props> = ({
   darkMode,
@@ -123,8 +120,6 @@ const ClassMarksPage: React.FC<Props> = ({
 
   if (!cls) return null;
 
-  /* ---------------- FILTER STUDENTS ---------------- */
-
   const filteredStudents = students.filter((student) => {
     const studentMarks = getStudentMarks(marks, student.id, cls.id);
 
@@ -156,7 +151,6 @@ const ClassMarksPage: React.FC<Props> = ({
     page * rowsPerPage + rowsPerPage
   );
 
-  /* ---------------- PAGINATION ---------------- */
 
   const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);

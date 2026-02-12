@@ -5,7 +5,7 @@ const AuditFilters = ({ onChange }: any) => {
   const [local, setLocal] = useState<any>({});
 
   return (
-    <Box display="flex" gap={2} flexWrap="wrap">
+    <Box display="flex" gap={2}  width={600}>
       <TextField
         select
         label="Action"

@@ -9,10 +9,11 @@ import {
 } from "@mui/material";
 import { AuditLog } from "../../models/AuditLog";
 import { formatAuditValue } from "../../utils/auditFormatter";
+import "../../styles/audit-table.css"
 
 const DeleteAuditTable = ({ logs }: { logs: AuditLog[] }) => (
-  <TableContainer component={Paper} sx={{ mb: 3 }}>
-    <Table>
+  <TableContainer component={Paper} className="audit-table-container">
+    <Table className="audit-table">
       <TableHead>
         <TableRow>
           <TableCell>User</TableCell>

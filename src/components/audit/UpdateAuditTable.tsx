@@ -1,12 +1,16 @@
 import {
-  Table, TableHead, TableRow, TableCell, TableBody
+  Table, TableHead, TableRow, TableCell, TableBody,
+  TableContainer,
+  Paper
 } from "@mui/material";
 import { AuditLog } from "../../models/AuditLog";
+import "../../styles/audit-table.css"
 
 export default function UpdateAuditTable({ logs }: { logs: AuditLog[] }) {
   return (
-    <Table>
-      <TableHead>
+    <TableContainer component={Paper} className="audit-table-container">
+      <Table className="audit-table">
+        <TableHead>
         <TableRow>
           <TableCell>User</TableCell>
           <TableCell>Entity</TableCell>
@@ -42,5 +46,6 @@ export default function UpdateAuditTable({ logs }: { logs: AuditLog[] }) {
         )}
       </TableBody>
     </Table>
+    </TableContainer>
   );
 }

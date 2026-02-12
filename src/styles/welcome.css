@@ -13,6 +13,10 @@
   background: linear-gradient(135deg, #356f60, #99f2c8);
   color: #fff;
 }
+.welcome-cont {
+  display: grid;
+  background: linear-gradient(135deg, #356f60, #99f2c8)
+}
 
 .left-section {
   display: flex;

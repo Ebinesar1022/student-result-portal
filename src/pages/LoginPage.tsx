@@ -78,7 +78,7 @@ const LoginPage = () => {
         })
       );
 
-      // 👉 audit login
+      //  audit login
       await auditLog({
         actorType: "TEACHER",
         actorId: teacher.id,
@@ -93,7 +93,7 @@ const LoginPage = () => {
       });
         nav("/teacher/dashboard", { state: user.teacher });
       } else {
-         // 👉 store current user
+         //  store current user
       localStorage.setItem(
         "currentUser",
         JSON.stringify({

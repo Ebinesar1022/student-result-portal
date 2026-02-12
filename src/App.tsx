@@ -73,7 +73,7 @@ const App = () => {
             <Route
               path="teachers"
               element={
-                <TeacherPage darkMode={darkMode} setDarkMode={setDarkMode} />
+                <TeacherPage />
               }
             />
             <Route

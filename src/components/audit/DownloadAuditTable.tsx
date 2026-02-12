@@ -8,11 +8,12 @@ import {
   Paper,
 } from "@mui/material";
 import { AuditLog } from "../../models/AuditLog";
+import "../../styles/audit-table.css"
 
 export default function DownloadAuditTable({ logs }: { logs: AuditLog[] }) {
   return (
-    <TableContainer component={Paper}>
-      <Table>
+    <TableContainer component={Paper} className="audit-table-container">
+      <Table className="audit-table">
         <TableHead>
           <TableRow>
             <TableCell>User</TableCell>

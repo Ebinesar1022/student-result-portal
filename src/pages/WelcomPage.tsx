@@ -11,10 +11,10 @@ const quotes = [
   "Your future is created by what you do today.",
 ];
 
-const getPercentage = (subjects: any[]) => {
-  const total = subjects.reduce((sum, s) => sum + s.marks, 0);
-  return Math.round(total / subjects.length);
-};
+// const getPercentage = (subjects: any[]) => {
+//   const total = subjects.reduce((sum, s) => sum + s.marks, 0);
+//   return Math.round(total / subjects.length);
+// };
 
 const WelcomePage = () => {
   const navigate = useNavigate();
@@ -25,57 +25,55 @@ const WelcomePage = () => {
     setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
     loadToppers();
   }, []);
-const loadToppers = async () => {
-  const classes = await CrudService.getClasses();
-  const allCards: any[] = [];
+  const loadToppers = async () => {
+    // 1️️ Fetch all data
+    const classes = await CrudService.getClasses();
+    const students = await CrudService.get<any[]>("/students");
+    const marks = await CrudService.get<any[]>("/marks");
 
-  for (const cls of classes) {
-    const students = await CrudService.getStudentsByClass(cls.id);
+    const allCards: any[] = [];
 
-    if (!students.length) continue;
+    // 2 Loop through classes
+    for (const cls of classes) {
+      // 3 Filter students belonging to this class
+      const classStudents = students.filter((s) => s.classId === cls.id);
 
-    // 🔥 FETCH MARKS HERE
-    const marks = await CrudService.get<any[]>(
-      `/marks?classId=${cls.id}`
-    );
+      if (!classStudents.length) continue;
 
-    const ranked = students
-      .map((s: any) => {
-        const studentMarks = marks.filter(
-          (m) => m.studentId === s.id
-        );
+      // 4 Build ranked list
+      const ranked = classStudents
+        .map((student) => {
+          // 5 Get marks for this student
+          const studentMarks = marks.filter((m) => m.studentId === student.id);
 
-        if (!studentMarks.length) return null;
+          if (!studentMarks.length) return null;
 
-        const total = studentMarks.reduce(
-          (sum, m) => sum + Number(m.marks),
-          0
-        );
+          const total = studentMarks.reduce(
+            (sum, m) => sum + Number(m.marks),
+            0,
+          );
 
-        const percentage = Math.round(
-          total / studentMarks.length
-        );
+          const percentage = Math.round(total / studentMarks.length);
 
-        return {
-          ...s,
-          percentage,
-        };
-      })
-      .filter(Boolean) // remove nulls
-      .sort((a, b) => b.percentage - a.percentage)
-      .slice(0, 3);
+          return {
+            ...student,
+            percentage,
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.percentage - a.percentage)
+        .slice(0, 3);
 
-    if (ranked.length) {
-      allCards.push({
-        className: cls.className,
-        toppers: ranked,
-      });
+      if (ranked.length) {
+        allCards.push({
+          className: cls.className,
+          toppers: ranked,
+        });
+      }
     }
-  }
 
-  setToppersByClass(allCards);
-};
-
+    setToppersByClass(allCards);
+  };
 
   return (
     <Box
@@ -152,7 +150,7 @@ const loadToppers = async () => {
             gap: 2,
           }}
         >
-          <Box className="slider-track" >
+          <Box className="slider-track">
             {[...toppersByClass, ...toppersByClass].map((card, index) => (
               <Paper className="topper-card" key={index} elevation={6}>
                 <Typography variant="h6" fontWeight="bold" mb={2}>

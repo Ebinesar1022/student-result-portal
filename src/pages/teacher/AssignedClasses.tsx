@@ -32,7 +32,7 @@ const AssignedClasses = ({ teacher }: Props) => {
 
   useEffect(() => {
     const load = async () => {
-      const ass = await CrudService.get<Assignment[]>(
+      const assignment = await CrudService.get<Assignment[]>(
         `/teacherAssignments?teacherId=${teacher.id}`
       );
 
@@ -43,7 +43,7 @@ const AssignedClasses = ({ teacher }: Props) => {
         map[c.id] = c.className;
       });
 
-      setAssignments(ass);
+      setAssignments(assignment);
       setClassMap(map);
     };
 

@@ -1,3 +1,4 @@
+import React from "react";
 import Navbar from "../components/common/Navbar";
 import { Outlet } from "react-router-dom";
 interface Props {
@@ -14,14 +15,14 @@ interface Props {
 
 const AdminPage = ({ darkMode, setDarkMode, setSnackbar }: Props) => {
   return (
-    <>
+    <React.Fragment>
       <Navbar
         title="Admin Dashboard"
         darkMode={darkMode}
         setDarkMode={setDarkMode}
       />
       <Outlet />
-    </>
+    </React.Fragment>
   );
 };
 

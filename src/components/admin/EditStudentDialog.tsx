@@ -96,6 +96,7 @@ const EditStudentDialog = ({ open, onClose, data, refresh }: any) => {
   }, [data]);
 
   const update = async () => {
+    await CrudService.put(`/students/${student.id}`, student);
     for (const m of marks) {
       const existing = await CrudService.get<any[]>(
         `/marks?studentId=${student.id}&subject=${m.name}&classId=${student.classId}`,

@@ -49,7 +49,6 @@ const TeacherProfileDrawer = ({
           My Profile
         </Typography>
 
-        {/* ❌ NOT EDITABLE */}
         <TextField
           label="Teacher Name"
           value={form.name}
@@ -75,7 +74,6 @@ const TeacherProfileDrawer = ({
           disabled
         />
 
-        {/* ✅ EDITABLE */}
         <TextField
           label="Phone"
           value={form.phone || ""}
@@ -120,7 +118,6 @@ const TeacherProfileDrawer = ({
           <MenuItem value="Married">Married</MenuItem>
         </TextField>
 
-        {/* FOOTER BUTTONS */}
         <Box mt="auto" display="flex" gap={2}>
           <Button fullWidth variant="outlined" onClick={onClose}>
             Cancel
