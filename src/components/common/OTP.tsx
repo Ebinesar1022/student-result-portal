@@ -61,7 +61,7 @@ const OTP = ({ open, email, onSuccess, onClose }: CommonOtpProps) => {
           "Failed to send OTP. Please try again.",
       );
 
-      onClose(); // 🔑 close dialog safely
+      onClose();
     }
   };
 

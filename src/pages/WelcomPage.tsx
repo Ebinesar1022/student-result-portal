@@ -87,13 +87,12 @@ const WelcomePage = () => {
         },
       }}
     >
-      {/* LEFT SECTION */}
       <Box
         className="left-section"
         sx={{
           width: {
-            xs: "100%", // mobile
-            md: "50%", // desktop
+            xs: "100%", 
+            md: "50%", 
           },
           padding: {
             xs: 3,
@@ -127,8 +126,8 @@ const WelcomePage = () => {
         className="right-section"
         sx={{
           width: {
-            xs: "100%", // mobile → full width
-            md: "50%", // desktop
+            xs: "100%",
+            md: "50%", 
           },
           padding: {
             xs: 2,

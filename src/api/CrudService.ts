@@ -28,7 +28,6 @@ export const CrudService = {
     return res.data;
   },
 
-  /* ---------------- AUTH ---------------- */
 
   login: async (username: string, password: string) => {
     // ADMIN
@@ -41,7 +40,6 @@ export const CrudService = {
       return { role: "admin" as const };
     }
 
-    // TEACHER
     const teachersRes = await axios.get<Teacher[]>(
       `${API}/teachers?teacherNo=${username}&password=${password}`
     );
@@ -68,7 +66,6 @@ export const CrudService = {
     return null;
   },
 
-  /* ---------------- CLASS HELPERS ---------------- */
 
   getClasses: async () => {
     const res = await axios.get<ClassModel[]>(`${API}/classes`);

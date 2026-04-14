@@ -1,0 +1,12 @@
+# .NET / Visual Studio
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.db
+*.sqlite
+
+# Logs & cache
+*.log
+*.cache
