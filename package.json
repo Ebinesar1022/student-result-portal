@@ -2,6 +2,7 @@
   "name": "stu",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5062",
   "dependencies": {
     "@base-ui/react": "^1.1.0",
     "@emailjs/browser": "^4.4.1",

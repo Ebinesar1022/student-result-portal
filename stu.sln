@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "api", "api", "{81034408-37C8-1011-444E-4C15C2FADA8E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "asp-api", "asp-api", "{EE9D6BB6-2B2C-E05E-5552-C4A385153A2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolManagementAPI", "src\api\asp-api\SchoolManagementAPI\SchoolManagementAPI.csproj", "{50E76014-A883-4662-9A9E-3790CEAA0D45}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50E76014-A883-4662-9A9E-3790CEAA0D45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50E76014-A883-4662-9A9E-3790CEAA0D45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50E76014-A883-4662-9A9E-3790CEAA0D45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50E76014-A883-4662-9A9E-3790CEAA0D45}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{81034408-37C8-1011-444E-4C15C2FADA8E} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{EE9D6BB6-2B2C-E05E-5552-C4A385153A2C} = {81034408-37C8-1011-444E-4C15C2FADA8E}
+		{50E76014-A883-4662-9A9E-3790CEAA0D45} = {EE9D6BB6-2B2C-E05E-5552-C4A385153A2C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EF436A38-B602-4276-B900-125D2C580F99}
+	EndGlobalSection
+EndGlobal

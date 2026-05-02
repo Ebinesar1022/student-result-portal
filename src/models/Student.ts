@@ -13,4 +13,5 @@ export interface Student {
   state: string;
   district: string;
   subjects: { name: string; marks: number }[];
+  
 }
