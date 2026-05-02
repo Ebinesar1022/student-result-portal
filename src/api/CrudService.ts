@@ -2,7 +2,9 @@ import axios from "axios";
 import { ClassModel, CreateClass } from "../models/Class";
 import { Student } from "../models/Student";
 
-const API = process.env.REACT_APP_API_URL || "/api";
+// Use environment variable for API URL, fallback to proxy or /api
+const API = process.env.REACT_APP_API_URL || 
+  (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5062/api');
 
 export const CrudService = {
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Button, Stack, Typography, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ApiDebugPanel from "../../components/common/ApiDebugPanel";
 interface Props {
   darkMode: boolean;
   setDarkMode: (value: boolean) => void;
@@ -67,6 +68,11 @@ const AdminDashboard = ({ darkMode, setDarkMode }: Props) => {
                 Audit
               </Button>
             </Stack>
+
+            {/* API Debug Panel */}
+            <Box sx={{ mt: 4 }}>
+              <ApiDebugPanel />
+            </Box>
           </Paper>
         </Box>
       </Box>
