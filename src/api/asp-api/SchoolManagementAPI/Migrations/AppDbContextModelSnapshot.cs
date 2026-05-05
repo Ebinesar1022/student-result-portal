@@ -186,7 +186,6 @@ namespace SchoolManagementAPI.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ClassId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("District")
@@ -214,7 +213,6 @@ namespace SchoolManagementAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Photo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RollNo")
@@ -406,9 +404,7 @@ namespace SchoolManagementAPI.Migrations
                 {
                     b.HasOne("SchoolManagementAPI.Models.Class", "Class")
                         .WithMany()
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ClassId");
 
                     b.Navigation("Class");
                 });

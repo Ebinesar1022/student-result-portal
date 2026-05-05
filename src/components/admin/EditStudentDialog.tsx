@@ -133,7 +133,7 @@ const EditStudentDialog = ({ open, onClose, data, refresh }: any) => {
     }
 
     if (name === "rollNo" && !validateField(value, regex.rollNo)) {
-      error = "Roll No must be like STU001";
+      error = "Roll No must be like STU001 or STU07001";
     }
 
     if (name === "phone" && !validateField(value, regex.phone)) {

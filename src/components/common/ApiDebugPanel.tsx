@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Button, Box, Paper, Typography, CircularProgress, Alert } from "@mui/material";
+import {
+  Button,
+  Box,
+  Paper,
+  Typography,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
 import { runApiTests, quickHealthCheck } from "../../utils/apiTest";
 
 const ApiDebugPanel: React.FC = () => {
@@ -28,7 +35,7 @@ const ApiDebugPanel: React.FC = () => {
     try {
       const connected = await quickHealthCheck();
       setIsConnected(connected);
-    } catch (error) {
+    } catch {
       setIsConnected(false);
     } finally {
       setLoading(false);
@@ -46,7 +53,7 @@ const ApiDebugPanel: React.FC = () => {
       }}
     >
       <Typography variant="h6" gutterBottom>
-        🔧 API Debug Panel
+        API Debug Panel
       </Typography>
 
       <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
@@ -71,8 +78,8 @@ const ApiDebugPanel: React.FC = () => {
       {isConnected !== null && (
         <Alert severity={isConnected ? "success" : "error"} sx={{ mb: 2 }}>
           {isConnected
-            ? "✅ Backend is reachable!"
-            : "❌ Backend is not responding. Check if the server is running on port 5062"}
+            ? "Backend is reachable!"
+            : "Backend is not responding. Check if the server is running on port 5062"}
         </Alert>
       )}
 
@@ -100,8 +107,8 @@ const ApiDebugPanel: React.FC = () => {
             }}
           >
             {testResults.success
-              ? `✅ All tests passed (${testResults.passed}/${testResults.passed + testResults.failed})`
-              : `❌ ${testResults.failed} test(s) failed`}
+              ? `All tests passed (${testResults.passed}/${testResults.passed + testResults.failed})`
+              : `${testResults.failed} test(s) failed`}
           </Typography>
           <Typography component="div" sx={{ mt: 1, color: "#666" }}>
             Average response time: {testResults.avgResponseTime}ms
@@ -110,8 +117,13 @@ const ApiDebugPanel: React.FC = () => {
           {testResults.results && (
             <Box sx={{ mt: 2 }}>
               {testResults.results.map((result: any, idx: number) => (
-                <Typography key={idx} component="div" sx={{ color: result.status === "✅ PASS" ? "#4caf50" : "#f44336" }}>
-                  {result.status} {result.method} {result.endpoint} ({result.responseTime}ms)
+                <Typography
+                  key={idx}
+                  component="div"
+                  sx={{ color: result.status === "PASS" ? "#4caf50" : "#f44336" }}
+                >
+                  {result.status} {result.method} {result.endpoint} (
+                  {result.responseTime}ms)
                 </Typography>
               ))}
             </Box>

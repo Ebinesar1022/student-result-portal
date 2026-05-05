@@ -1,5 +1,6 @@
 import { Button, TextField, Box, Paper, Typography } from "@mui/material";
 import { useState } from "react";
+import axios from "axios";
 import { CrudService } from "../api/CrudService";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
@@ -120,7 +121,16 @@ const LoginPage = () => {
         nav(`/student/${user.rollNo}`);
       }
     } catch (error) {
-      alert("Server not running");
+      if (axios.isAxiosError(error)) {
+        alert(
+          error.response?.data?.message ||
+            error.message ||
+            "Login request failed",
+        );
+        return;
+      }
+
+      alert("Login request failed");
     }
   };
 
