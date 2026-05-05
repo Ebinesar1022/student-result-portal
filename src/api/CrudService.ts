@@ -6,6 +6,9 @@ import { Student } from "../models/Student";
 const API = process.env.REACT_APP_API_URL || 
   (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5062/api');
 
+const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
 export const CrudService = {
 
   get: async <T>(url: string): Promise<T> => {
@@ -33,8 +36,27 @@ export const CrudService = {
     try {
       const res = await axios.post(`${API}/auth/login`, { username, password });
       return res.data;
-    } catch {
-      return null;
+    } catch (error: any) {
+      if (error?.response?.status === 401) {
+        return null;
+      }
+
+      // Retry once for transient first-request failures while the local API wakes up.
+      await sleep(400);
+
+      try {
+        const retryRes = await axios.post(`${API}/auth/login`, {
+          username,
+          password,
+        });
+        return retryRes.data;
+      } catch (retryError: any) {
+        if (retryError?.response?.status === 401) {
+          return null;
+        }
+
+        throw retryError;
+      }
     }
   },
 
