@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Button,
   Box,
@@ -49,18 +49,18 @@ const ClassStudentsPage: React.FC<Props> = ({ setSnackbar }) => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     const classes = await CrudService.getClasses();
     const found = classes.find((c) => c.id === classId) || null;
     setCls(found);
 
     const studs = await CrudService.getStudentsByClass(classId);
     setStudents(studs);
-  };
+  }, [classId]);
 
   useEffect(() => {
     load();
-  }, [load,classId]);
+  }, [load]);
 
   const filteredStudents = useMemo(() => {
     return students.filter(

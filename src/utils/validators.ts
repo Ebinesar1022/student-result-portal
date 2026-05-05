@@ -1,6 +1,6 @@
 export const regex = {
   name: /^[A-Za-z ]{3,50}$/,
-  rollNo: /^STU\d{3,5}$/,
+  rollNo: /^[A-Za-z]{3}\d{3,5}$/,
   password: /^.{6,}$/,
   teacherNo: /^STAFF\d{3}$/,
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,

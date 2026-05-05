@@ -25,7 +25,7 @@ const endpoints = [
   { method: "GET", path: "/teachers", description: "Get all teachers" },
   { method: "POST", path: "/auth/login", description: "Login endpoint (requires credentials)" },
   { method: "GET", path: "/marks", description: "Get marks" },
-  { method: "GET", path: "/audit-logs", description: "Get audit logs" },
+  { method: "GET", path: "/audit", description: "Get audit logs" },
 ];
 
 export const runApiTests = async () => {
